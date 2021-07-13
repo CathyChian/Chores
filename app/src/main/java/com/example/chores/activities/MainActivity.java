@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.chores.R;
@@ -15,7 +16,6 @@ import com.example.chores.fragments.AccountFragment;
 import com.example.chores.fragments.ListFragment;
 import com.example.chores.fragments.RoommatesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(R.layout.activity_main);
+        setContentView(binding.getRoot());
 
         final Fragment listFragment = new ListFragment();
         final Fragment roommatesFragment = new RoommatesFragment();
@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment;
-                switch (menuItem.getItemId()) {
+                switch (item.getItemId()) {
                     case R.id.action_list:
                         Log.i(TAG, "Clicked list menu item");
                         fragment = listFragment;
