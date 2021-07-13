@@ -29,12 +29,12 @@ Organize chores and simplifies when chores need to be done, and allows chores to
 * Detailed view of each chore
 * Share chores with roommates - will require figuring out how to share data between specific accounts
     * Account login and logout
+* Sort chores by priority, date due, etc.
+* Calendar of chores (Google Calendar integration?)
 
 **Optional Nice-to-have Stories**
 
-* Calendar of chores (Google Calendar integration?)
 * Graph of when chores were finished in detailed view
-* Sort chores by priority, date due, etc.
 * Search chores
 
 ### 2. Screen Archetypes
@@ -83,7 +83,7 @@ Organize chores and simplifies when chores need to be done, and allows chores to
    | user          | Pointer to User| user who created chore |
    | sharedWith    | List of Pointers to User | users who also have this chore |
    | frequency     | int      | frequency that the user set for the chore |
-   | reoccurring   | boolean  | true if chore is reoccurring |
+   | recurring   | boolean  | true if chore is reoccurring |
    | priority      | int      | how important the user set the chore as |
    | lastCompleted | DateTime | when the chore was last completed |
    | createdAt     | DateTime | date when post is created (default field) |
