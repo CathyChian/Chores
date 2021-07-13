@@ -20,6 +20,7 @@ import com.example.chores.models.Chore;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,7 @@ public class ListFragment extends Fragment {
     protected void queryChores() {
         ParseQuery<Chore> query = ParseQuery.getQuery(Chore.class);
         query.include("user");
+        query.whereEqualTo("user", ParseUser.getCurrentUser());
         query.setLimit(20);
         query.addDescendingOrder(Chore.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Chore>() {

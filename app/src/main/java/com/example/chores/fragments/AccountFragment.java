@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.chores.activities.LoginActivity;
 import com.example.chores.activities.MainActivity;
 import com.example.chores.databinding.FragmentAccountBinding;
 import com.parse.ParseUser;
@@ -48,12 +49,11 @@ public class AccountFragment extends Fragment {
         ParseUser.logOut();
         ParseUser currentUser = ParseUser.getCurrentUser(); // currentUser will now be null
         Toast.makeText(getContext(), "Logged out!", Toast.LENGTH_SHORT).show();
-        // goLoginActivity();
+        goLoginActivity();
     }
 
-//    private void goLoginActivity() {
-//        Intent i = new Intent(this, LoginActivity.class);
-//        startActivity(i);
-//        finish();
-//    }
+    private void goLoginActivity() {
+        Intent i = new Intent(getActivity(), LoginActivity.class);
+        startActivity(i);
+    }
 }
