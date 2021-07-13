@@ -44,6 +44,10 @@ dependencies {
     // parse
     implementation 'com.github.parse-community.Parse-SDK-Android:parse:1.25.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1' // for logging API calls to LogCat
+    // recyclerview
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    // swiperefreshlayout
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     // parceler
     implementation 'org.parceler:parceler-api:1.1.12'
     annotationProcessor 'org.parceler:parceler:1.1.12'
