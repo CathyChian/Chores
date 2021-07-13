@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.chores.activities.ComposeActivity;
 import com.example.chores.activities.LoginActivity;
 import com.example.chores.activities.MainActivity;
 import com.example.chores.databinding.FragmentAccountBinding;
@@ -41,6 +42,15 @@ public class AccountFragment extends Fragment {
             public void onClick(View v) {
                 Log.i(TAG, "onClick logout button");
                 logout();
+            }
+        });
+
+        binding.btnCompose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick new chore button");
+                Intent i = new Intent(getActivity(), ComposeActivity.class);
+                startActivity(i);
             }
         });
     }
