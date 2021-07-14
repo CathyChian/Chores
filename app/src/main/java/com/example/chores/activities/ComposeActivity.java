@@ -1,5 +1,6 @@
 package com.example.chores.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,8 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.parceler.Parcels;
 
 public class ComposeActivity extends AppCompatActivity {
 
@@ -48,6 +51,11 @@ public class ComposeActivity extends AppCompatActivity {
                         binding.etDescription.setText("");
                         binding.tbtnRecurring.setChecked(false);
                         binding.etFrequency.setText("");
+
+                        Intent intent = new Intent();
+                        intent.putExtra("chore", Parcels.wrap(chore));
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
                 });
             }

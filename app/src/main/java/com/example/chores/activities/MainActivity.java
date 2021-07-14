@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
-
         final Fragment listFragment = new ListFragment();
         final Fragment roommatesFragment = new RoommatesFragment();
         final Fragment accountFragment = new AccountFragment();
@@ -63,26 +61,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         binding.bottomNavigation.setSelectedItemId(R.id.action_list);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.miCompose) {
-            compose();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void compose() {
-        Log.i(TAG, "onClick new chore button");
-        Intent i = new Intent(MainActivity.this, ComposeActivity.class);
-        startActivity(i);
     }
 }

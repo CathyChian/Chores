@@ -1,5 +1,6 @@
 package com.example.chores.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -8,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -94,12 +99,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
         @Override
         public void onClick(View v) {
-            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
-                Chore chore = chores.get(getAdapterPosition());
-                Intent intent = new Intent(context, ChoreDetailsActivity.class);
-                intent.putExtra("chore", Parcels.wrap(chore));
-                context.startActivity(intent);
-            }
+            if (getAdapterPosition() == RecyclerView.NO_POSITION) { return; }
+
+            Chore chore = chores.get(getAdapterPosition());
+            Intent intent = new Intent(context, ChoreDetailsActivity.class);
+            intent.putExtra("chore", Parcels.wrap(chore));
+            context.startActivity(intent);
+
             // TODO: Update adapter after deleting from detailed view and after editing chore and after adding new chore
         }
 
