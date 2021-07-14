@@ -47,8 +47,8 @@ public class Chore extends ParseObject {
         put("recurring", recurring);
     }
 
-    public int getFrequency()  {
-        return getNumber("frequency").intValue();
+    public Number getFrequency()  {
+        return getNumber("frequency");
     }
 
     public void setFrequency(String frequency) {

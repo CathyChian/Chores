@@ -1,5 +1,6 @@
 package com.example.chores.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,18 +23,23 @@ public class EditActivity extends AppCompatActivity {
     public static final String TAG = "EditActivity";
     ActivityComposeBinding binding;
     Chore chore;
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityComposeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         chore = Parcels.unwrap(getIntent().getParcelableExtra("chore"));
+        position = getIntent().getIntExtra("position", -1);
 
         binding.etName.setText(chore.getName());
         binding.etDescription.setText(chore.getDescription());
         binding.tbtnRecurring.setChecked(chore.isRecurring());
-        binding.etFrequency.setText(String.valueOf(chore.getFrequency()));
+        if (chore.getFrequency() != null) {
+            binding.etFrequency.setText(String.valueOf(chore.getFrequency().intValue()));
+        }
 
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +61,12 @@ public class EditActivity extends AppCompatActivity {
                         binding.etDescription.setText("");
                         binding.tbtnRecurring.setChecked(false);
                         binding.etFrequency.setText("");
+
+                        Intent intent = new Intent();
+                        intent.putExtra("chore", Parcels.wrap(chore));
+                        intent.putExtra("position", position);
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
                 });
             }

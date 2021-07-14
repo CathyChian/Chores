@@ -107,7 +107,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             Intent intent = new Intent(context, ChoreDetailsActivity.class);
             intent.putExtra("chore", Parcels.wrap(chore));
             intent.putExtra("position", getAdapterPosition());
-            fragment.startActivityForResult(intent, 8);
+            fragment.startActivityForResult(intent, fragment.DELETE_REQUEST_CODE);
 
             // TODO: Update adapter after editing chore
         }

@@ -43,8 +43,9 @@ import static android.app.Activity.RESULT_OK;
 public class ListFragment extends Fragment {
 
     public static final String TAG = "PostsFragment";
-    private final int ADD_REQUEST_CODE = 7;
-    private final int DELETE_REQUEST_CODE = 8;
+    public static final int ADD_REQUEST_CODE = 7;
+    public static final int DELETE_REQUEST_CODE = 8;
+    public static final int EDIT_REQUEST_CODE = 9;
     FragmentListBinding binding;
 
     protected ListAdapter adapter;
@@ -104,7 +105,7 @@ public class ListFragment extends Fragment {
     public void compose() {
         Log.i(TAG, "onClick new chore button");
         Intent i = new Intent(getContext(), ComposeActivity.class);
-        startActivityForResult(i, 7);
+        startActivityForResult(i, ADD_REQUEST_CODE);
     }
 
     @Override
@@ -122,6 +123,13 @@ public class ListFragment extends Fragment {
             adapter.notifyItemRemoved(position);
             binding.rvList.smoothScrollToPosition(position);
             Log.i(TAG, "onActivityResult: delete, position: " + position);
+        }
+        if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
+            Chore chore = Parcels.unwrap((data.getParcelableExtra("chore")));
+            int position = data.getIntExtra("position", -1);
+            adapter.notifyItemChanged(position);
+            binding.rvList.smoothScrollToPosition(position);
+            Log.i(TAG, "onActivityResult: edit, name: " + chore.getName());
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

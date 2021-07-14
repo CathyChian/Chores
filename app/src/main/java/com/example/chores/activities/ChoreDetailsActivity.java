@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chores.databinding.ActivityChoreDetailsBinding;
+import com.example.chores.fragments.ListFragment;
 import com.example.chores.models.Chore;
 
 import org.parceler.Parcels;
@@ -31,6 +33,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
 
         binding.tvName.setText(chore.getName());
         binding.tvDescription.setText(chore.getDescription());
+        setRecurring(chore);
 
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,7 +41,8 @@ public class ChoreDetailsActivity extends AppCompatActivity {
                 Log.i(TAG, "onClick new chore button");
                 Intent intent = new Intent(ChoreDetailsActivity.this, EditActivity.class);
                 intent.putExtra("chore", Parcels.wrap(chore));
-                startActivity(intent);
+                intent.putExtra("position", position);
+                startActivityForResult(intent, ListFragment.EDIT_REQUEST_CODE);
             }
         });
 
@@ -52,5 +56,32 @@ public class ChoreDetailsActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void setRecurring(Chore chore) {
+        if (chore.isRecurring()) {
+            binding.tvRecurring.setText("Repeats every " + chore.getFrequency() + " days");
+        } else {
+
+            binding.tvRecurring.setText("");
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == ListFragment.EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
+            Chore chore = Parcels.unwrap((data.getParcelableExtra("chore")));
+            int position = data.getIntExtra("position", -1);
+            refresh(chore);
+            Log.i(TAG, "onActivityResult: edit, name: " + chore.getName());
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    // TODO: Add pull to refresh to detailed view
+    public void refresh(Chore chore) {
+        binding.tvName.setText(chore.getName());
+        binding.tvDescription.setText(chore.getDescription());
+        setRecurring(chore);
     }
 }
