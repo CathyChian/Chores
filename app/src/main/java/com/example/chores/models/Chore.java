@@ -4,15 +4,13 @@ import com.parse.ParseObject;
 import com.parse.ParseClassName;
 import com.parse.ParseUser;
 
+import org.parceler.Parcel;
+
+@Parcel(analyze = Chore.class)
 @ParseClassName("Chore")
 public class Chore extends ParseObject {
 
     public Chore() {
-        super();
-    }
-
-    public String getObjectId() {
-        return getString("objectId");
     }
 
     public String getName() {

@@ -44,15 +44,6 @@ public class AccountFragment extends Fragment {
                 logout();
             }
         });
-
-        binding.btnCompose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onClick new chore button");
-                Intent i = new Intent(getActivity(), ComposeActivity.class);
-                startActivity(i);
-            }
-        });
     }
 
     public void logout() {

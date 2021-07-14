@@ -1,6 +1,7 @@
 package com.example.chores.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chores.activities.ChoreDetailsActivity;
 import com.example.chores.databinding.ItemChoreBinding;
 import com.example.chores.models.Chore;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -56,20 +60,44 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvName;
         private TextView tvDescription;
+        private ImageView ivDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = binding.tvName;
             tvDescription = binding.tvDescription;
+            ivDelete = binding.ivDelete;
+
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Chore chore) {
             tvName.setText(chore.getName());
             tvDescription.setText(chore.getDescription());
+
+            ivDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    chore.deleteInBackground();
+                    chores.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
+                }
+            });
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                Chore chore = chores.get(getAdapterPosition());
+                Intent intent = new Intent(context, ChoreDetailsActivity.class);
+                intent.putExtra("chore", Parcels.wrap(chore));
+                context.startActivity(intent);
+            }
+            // TODO: Update adapter after deleting from detailed view and after editing chore and after adding new chore
         }
     }
 }

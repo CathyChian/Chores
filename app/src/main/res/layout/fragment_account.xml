@@ -11,12 +11,4 @@
         android:layout_height="wrap_content"
         android:text="Logout" />
 
-    <Button
-        android:id="@+id/btnCompose"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnLogout"
-        android:layout_alignParentEnd="true"
-        android:text="Temporary New Chore Button" />
-
 </RelativeLayout>
