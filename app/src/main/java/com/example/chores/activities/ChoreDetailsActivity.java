@@ -17,6 +17,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
     public static final String TAG = "ChoreDetailsActivity";
     ActivityChoreDetailsBinding binding;
     Chore chore;
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         chore = Parcels.unwrap(getIntent().getParcelableExtra("chore"));
+        position = getIntent().getIntExtra("position", -1);
         Log.i(TAG, "Showing " + chore.getName() + " chore. Description: " + chore.getDescription());
 
         binding.tvName.setText(chore.getName());
@@ -43,9 +45,11 @@ public class ChoreDetailsActivity extends AppCompatActivity {
         binding.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("position", position);
+                setResult(RESULT_OK, intent);
                 chore.deleteInBackground();
-//                chores.remove(getAdapterPosition());
-//                notifyItemRemoved(getAdapterPosition());
+                finish();
             }
         });
     }

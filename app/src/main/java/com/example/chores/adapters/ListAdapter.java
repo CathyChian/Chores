@@ -17,7 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chores.activities.ChoreDetailsActivity;
+import com.example.chores.activities.MainActivity;
 import com.example.chores.databinding.ItemChoreBinding;
+import com.example.chores.fragments.ListFragment;
 import com.example.chores.models.Chore;
 
 import org.parceler.Parcels;
@@ -31,9 +33,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private Context context;
     private List<Chore> chores;
     ItemChoreBinding binding;
+    ListFragment fragment;
 
-    public ListAdapter(Context context, List<Chore> chores) {
+    public ListAdapter(Context context, ListFragment fragment, List<Chore> chores) {
         this.context = context;
+        this.fragment = fragment;
         this.chores = chores;
     }
 
@@ -90,9 +94,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    chore.deleteInBackground();
-                    chores.remove(getAdapterPosition());
-                    notifyItemRemoved(getAdapterPosition());
+                    deleteChore(chore);
                 }
             });
         }
@@ -104,15 +106,24 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             Chore chore = chores.get(getAdapterPosition());
             Intent intent = new Intent(context, ChoreDetailsActivity.class);
             intent.putExtra("chore", Parcels.wrap(chore));
-            context.startActivity(intent);
+            intent.putExtra("position", getAdapterPosition());
+            fragment.startActivityForResult(intent, 8);
 
-            // TODO: Update adapter after deleting from detailed view and after editing chore and after adding new chore
+            // TODO: Update adapter after editing chore
         }
 
         public void setRecurring(Chore chore) {
             if (chore.isRecurring()) {
                 tvRecurring.setText("Repeats every " + chore.getFrequency() + " days");
+            } else {
+                tvRecurring.setText("");
             }
+        }
+
+        public void deleteChore(Chore chore) {
+            chore.deleteInBackground();
+            chores.remove(getAdapterPosition());
+            notifyItemRemoved(getAdapterPosition());
         }
     }
 }

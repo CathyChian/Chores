@@ -43,7 +43,8 @@ import static android.app.Activity.RESULT_OK;
 public class ListFragment extends Fragment {
 
     public static final String TAG = "PostsFragment";
-    private final int REQUEST_CODE = 7;
+    private final int ADD_REQUEST_CODE = 7;
+    private final int DELETE_REQUEST_CODE = 8;
     FragmentListBinding binding;
 
     protected ListAdapter adapter;
@@ -65,7 +66,7 @@ public class ListFragment extends Fragment {
         ((MainActivity) getActivity()).setSupportActionBar(binding.toolbar);
 
         chores = new ArrayList<>();
-        adapter = new ListAdapter(getContext(), chores);
+        adapter = new ListAdapter(getContext(), ListFragment.this, chores);
 
         binding.rvList.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -108,11 +109,19 @@ public class ListFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == ADD_REQUEST_CODE && resultCode == RESULT_OK) {
             Chore chore = Parcels.unwrap((data.getParcelableExtra("chore")));
             chores.add(0, chore);
             adapter.notifyItemInserted(0);
             binding.rvList.smoothScrollToPosition(0);
+            Log.i(TAG, "onActivityResult: add, name: " + chore.getName());
+        }
+        if (requestCode == DELETE_REQUEST_CODE && resultCode == RESULT_OK) {
+            int position = data.getIntExtra("position", -1);
+            chores.remove(position);
+            adapter.notifyItemRemoved(position);
+            binding.rvList.smoothScrollToPosition(position);
+            Log.i(TAG, "onActivityResult: delete, position: " + position);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
