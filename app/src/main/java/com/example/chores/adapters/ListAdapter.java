@@ -65,12 +65,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         private TextView tvName;
         private TextView tvDescription;
         private ImageView ivDelete;
+        private TextView tvRecurring;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = binding.tvName;
             tvDescription = binding.tvDescription;
             ivDelete = binding.ivDelete;
+            tvRecurring = binding.tvRecurring;
 
             itemView.setOnClickListener(this);
         }
@@ -78,6 +80,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         public void bind(Chore chore) {
             tvName.setText(chore.getName());
             tvDescription.setText(chore.getDescription());
+            setRecurring(chore);
 
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -98,6 +101,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                 context.startActivity(intent);
             }
             // TODO: Update adapter after deleting from detailed view and after editing chore and after adding new chore
+        }
+
+        public void setRecurring(Chore chore) {
+            if (chore.isRecurring()) {
+                tvRecurring.setText("Repeats every " + chore.getFrequency() + " days");
+            }
         }
     }
 }

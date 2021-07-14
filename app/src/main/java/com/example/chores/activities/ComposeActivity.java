@@ -33,6 +33,9 @@ public class ComposeActivity extends AppCompatActivity {
                 chore.setName(binding.etName.getText().toString());
                 chore.setDescription(binding.etDescription.getText().toString());
                 chore.setUser(ParseUser.getCurrentUser());
+                chore.setRecurring(binding.tbtnRecurring.isChecked());
+                chore.setFrequency(binding.etFrequency.getText().toString());
+
                 chore.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -43,6 +46,8 @@ public class ComposeActivity extends AppCompatActivity {
                         Log.i(TAG, "Post save was successful!");
                         binding.etName.setText("");
                         binding.etDescription.setText("");
+                        binding.tbtnRecurring.setChecked(false);
+                        binding.etFrequency.setText("");
                     }
                 });
             }

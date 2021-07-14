@@ -30,8 +30,30 @@
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etDescription"
+        android:layout_below="@+id/tbtnRecurring"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
         android:text="Save" />
+
+    <ToggleButton
+        android:id="@+id/tbtnRecurring"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etDescription"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:text="ToggleButton" />
+
+    <EditText
+        android:id="@+id/etFrequency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etDescription"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/tbtnRecurring"
+        android:ems="10"
+        android:hint="Frequency"
+        android:inputType="textPersonName" />
+
 </RelativeLayout>

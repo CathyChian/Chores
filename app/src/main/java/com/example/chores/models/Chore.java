@@ -18,7 +18,8 @@ public class Chore extends ParseObject {
     }
 
     public void setName(String name) {
-        put("name", name);
+        if (!name.isEmpty())
+            put("name", name);
     }
 
     public String getDescription() {
@@ -26,7 +27,8 @@ public class Chore extends ParseObject {
     }
 
     public void setDescription(String description) {
-        put("description", description);
+        if (!description.isEmpty())
+            put("description", description);
     }
 
     public ParseUser getUser()  {
@@ -35,5 +37,31 @@ public class Chore extends ParseObject {
 
     public void setUser(ParseUser user) {
         put("user", user);
+    }
+
+    public boolean isRecurring()  {
+        return getBoolean("recurring");
+    }
+
+    public void setRecurring(boolean recurring) {
+        put("recurring", recurring);
+    }
+
+    public int getFrequency()  {
+        return getNumber("frequency").intValue();
+    }
+
+    public void setFrequency(String frequency) {
+        if (!frequency.isEmpty())
+            put("frequency", Integer.valueOf(frequency));
+    }
+
+    public int getPriority()  {
+        return getNumber("priority").intValue();
+    }
+
+    public void setPriority(String priority) {
+        if (!priority.isEmpty())
+            put("priority", Integer.valueOf(priority));
     }
 }

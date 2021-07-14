@@ -30,11 +30,19 @@ public class EditActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         chore = Parcels.unwrap(getIntent().getParcelableExtra("chore"));
 
+        binding.etName.setText(chore.getName());
+        binding.etDescription.setText(chore.getDescription());
+        binding.tbtnRecurring.setChecked(chore.isRecurring());
+        binding.etFrequency.setText(String.valueOf(chore.getFrequency()));
+
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chore.setName(binding.etName.getText().toString());
                 chore.setDescription(binding.etDescription.getText().toString());
+                chore.setRecurring(binding.tbtnRecurring.isChecked());
+                chore.setFrequency(binding.etFrequency.getText().toString());
+
                 chore.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -45,6 +53,8 @@ public class EditActivity extends AppCompatActivity {
                         Log.i(TAG, "Post save was successful!");
                         binding.etName.setText("");
                         binding.etDescription.setText("");
+                        binding.tbtnRecurring.setChecked(false);
+                        binding.etFrequency.setText("");
                     }
                 });
             }
