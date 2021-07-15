@@ -1,14 +1,22 @@
 package com.example.chores.models;
 
+import android.util.Log;
+
 import com.parse.ParseObject;
 import com.parse.ParseClassName;
 import com.parse.ParseUser;
 
 import org.parceler.Parcel;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 @Parcel(analyze = Chore.class)
 @ParseClassName("Chore")
 public class Chore extends ParseObject {
+
+    private static final String TAG = "Chore";
 
     public Chore() {
     }
@@ -31,7 +39,7 @@ public class Chore extends ParseObject {
             put("description", description);
     }
 
-    public ParseUser getUser()  {
+    public ParseUser getUser() {
         return getParseUser("user");
     }
 
@@ -39,7 +47,7 @@ public class Chore extends ParseObject {
         put("user", user);
     }
 
-    public boolean isRecurring()  {
+    public boolean isRecurring() {
         return getBoolean("recurring");
     }
 
@@ -47,7 +55,7 @@ public class Chore extends ParseObject {
         put("recurring", recurring);
     }
 
-    public Number getFrequency()  {
+    public Number getFrequency() {
         return getNumber("frequency");
     }
 
@@ -56,12 +64,46 @@ public class Chore extends ParseObject {
             put("frequency", Integer.valueOf(frequency));
     }
 
-    public int getPriority()  {
+    public int getPriority() {
         return getNumber("priority").intValue();
     }
 
     public void setPriority(String priority) {
         if (!priority.isEmpty())
             put("priority", Integer.valueOf(priority));
+    }
+
+    public Date getDateDue() {
+        return getDate("dateDue");
+    }
+
+    public void setDateDue() {
+        Calendar dueDay = Calendar.getInstance();
+        dueDay.setTimeInMillis(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(getFrequency().intValue()));
+        reduceDateToDay(dueDay);
+        put("dateDue", dueDay.getTime());
+    }
+
+    public String getRelativeDueDate() {
+        long diffInMillis = getDateDue().getTime() - reduceDateToDay(Calendar.getInstance()).getTimeInMillis();
+        int diffInDays = (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+
+        String relativeDueDate;
+        if (diffInDays == 0) {
+            relativeDueDate = "Due today";
+        } else if (diffInDays == 1) {
+            relativeDueDate = "Due tomorrow";
+        } else {
+            relativeDueDate = "Due in " + diffInDays + " days";
+        }
+        return relativeDueDate;
+    }
+
+    public Calendar reduceDateToDay(Calendar cal) {
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal;
     }
 }

@@ -45,7 +45,8 @@ public class EditActivity extends AppCompatActivity {
                 chore.setName(binding.etName.getText().toString());
                 chore.setDescription(binding.etDescription.getText().toString());
                 chore.setRecurring(binding.tbtnRecurring.isChecked());
-                chore.setFrequency(binding.etFrequency.getText().toString());
+                if (binding.tbtnRecurring.isChecked())
+                    chore.setFrequency(binding.etFrequency.getText().toString());
 
                 chore.saveInBackground(new SaveCallback() {
                     @Override

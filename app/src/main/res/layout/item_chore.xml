@@ -42,4 +42,12 @@
         android:layout_below="@+id/ivDelete"
         android:layout_alignParentEnd="true"
         tools:text="Repeats every 5 days" />
+
+    <TextView
+        android:id="@+id/tvDateDue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvRecurring"
+        android:layout_alignParentEnd="true"
+        tools:text="Due in 3 days" />
 </RelativeLayout>

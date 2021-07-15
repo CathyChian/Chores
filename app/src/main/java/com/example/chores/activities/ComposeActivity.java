@@ -18,6 +18,8 @@ import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
+import java.util.Date;
+
 public class ComposeActivity extends AppCompatActivity {
 
     public static final String TAG = "ComposeActivity";
@@ -38,6 +40,7 @@ public class ComposeActivity extends AppCompatActivity {
                 chore.setUser(ParseUser.getCurrentUser());
                 chore.setRecurring(binding.tbtnRecurring.isChecked());
                 chore.setFrequency(binding.etFrequency.getText().toString());
+                chore.setDateDue();
 
                 chore.saveInBackground(new SaveCallback() {
                     @Override

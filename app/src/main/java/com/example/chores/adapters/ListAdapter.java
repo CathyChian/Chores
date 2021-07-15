@@ -69,6 +69,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         private TextView tvDescription;
         private ImageView ivDelete;
         private TextView tvRecurring;
+        private TextView tvDateDue;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -76,14 +77,19 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             tvDescription = binding.tvDescription;
             ivDelete = binding.ivDelete;
             tvRecurring = binding.tvRecurring;
+            tvDateDue = binding.tvDateDue;
 
             itemView.setOnClickListener(this);
         }
 
+        // TODO: Account for singular text
         public void bind(Chore chore) {
             tvName.setText(chore.getName());
             tvDescription.setText(chore.getDescription());
             setRecurring(chore);
+
+
+            tvDateDue.setText(chore.getRelativeDueDate());
 
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -101,9 +107,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             Intent intent = new Intent(context, ChoreDetailsActivity.class);
             intent.putExtra("chore", Parcels.wrap(chore));
             intent.putExtra("position", getAdapterPosition());
-            fragment.startActivityForResult(intent, fragment.UPDATE_REQUEST_CODE);
-
-            // TODO: Update adapter after editing chore
+            fragment.startActivityForResult(intent, ListFragment.UPDATE_REQUEST_CODE);
         }
 
         public void setRecurring(Chore chore) {
