@@ -30,7 +30,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
         binding = ActivityChoreDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.tbDetailed);
+        setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -40,7 +40,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
 
         binding.tvName.setText(chore.getName());
         binding.tvDescription.setText(chore.getDescription());
-        setRecurring(chore);
+        binding.tvRecurring.setText(chore.getRecurringText());
 
         binding.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +89,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
     public void refresh(Chore chore) {
         binding.tvName.setText(chore.getName());
         binding.tvDescription.setText(chore.getDescription());
-        setRecurring(chore);
+        binding.tvRecurring.setText(chore.getRecurringText());
     }
 
     public void launchEdit() {
@@ -97,15 +97,6 @@ public class ChoreDetailsActivity extends AppCompatActivity {
         intent.putExtra("chore", Parcels.wrap(chore));
         intent.putExtra("position", position);
         startActivityForResult(intent, ListFragment.UPDATE_REQUEST_CODE);
-    }
-
-    public void setRecurring(Chore chore) {
-        if (chore.isRecurring()) {
-            binding.tvRecurring.setText("Repeats every " + chore.getFrequency() + " days");
-        } else {
-
-            binding.tvRecurring.setText("");
-        }
     }
 
     public void passBackChore(String operation) {

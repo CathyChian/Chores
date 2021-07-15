@@ -82,14 +82,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             itemView.setOnClickListener(this);
         }
 
-        // TODO: Account for singular text
         public void bind(Chore chore) {
             tvName.setText(chore.getName());
             tvDescription.setText(chore.getDescription());
-            setRecurring(chore);
-
-
-            tvDateDue.setText(chore.getRelativeDueDate());
+            tvRecurring.setText(chore.getRecurringText());
+            tvDateDue.setText(chore.getRelativeDateText());
 
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -108,14 +105,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             intent.putExtra("chore", Parcels.wrap(chore));
             intent.putExtra("position", getAdapterPosition());
             fragment.startActivityForResult(intent, ListFragment.UPDATE_REQUEST_CODE);
-        }
-
-        public void setRecurring(Chore chore) {
-            if (chore.isRecurring()) {
-                tvRecurring.setText("Repeats every " + chore.getFrequency() + " days");
-            } else {
-                tvRecurring.setText("");
-            }
         }
 
         public void deleteChore(Chore chore) {

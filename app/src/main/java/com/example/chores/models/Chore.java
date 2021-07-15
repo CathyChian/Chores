@@ -55,8 +55,8 @@ public class Chore extends ParseObject {
         put("recurring", recurring);
     }
 
-    public Number getFrequency() {
-        return getNumber("frequency");
+    public int getFrequency() {
+        return getNumber("frequency").intValue();
     }
 
     public void setFrequency(String frequency) {
@@ -79,24 +79,34 @@ public class Chore extends ParseObject {
 
     public void setDateDue() {
         Calendar dueDay = Calendar.getInstance();
-        dueDay.setTimeInMillis(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(getFrequency().intValue()));
+        dueDay.setTimeInMillis(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(getFrequency()));
         reduceDateToDay(dueDay);
         put("dateDue", dueDay.getTime());
     }
 
-    public String getRelativeDueDate() {
+    public String getRecurringText() {
+        if (!isRecurring() || getFrequency() < 1)
+            return "Does not repeat";
+        if (getFrequency() == 1)
+            return "Repeats every day";
+
+        return "Repeats every " + getFrequency() + " days";
+    }
+
+    public String getRelativeDateText() {
         long diffInMillis = getDateDue().getTime() - reduceDateToDay(Calendar.getInstance()).getTimeInMillis();
         int diffInDays = (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
 
-        String relativeDueDate;
-        if (diffInDays == 0) {
-            relativeDueDate = "Due today";
-        } else if (diffInDays == 1) {
-            relativeDueDate = "Due tomorrow";
-        } else {
-            relativeDueDate = "Due in " + diffInDays + " days";
-        }
-        return relativeDueDate;
+        if (diffInDays < -1)
+            return "Due " + Math.abs(diffInDays) + " days ago";
+        if (diffInDays == -1)
+            return "Due yesterday";
+        if (diffInDays == 0)
+            return "Due today";
+        if (diffInDays == 1)
+            return "Due tomorrow";
+
+        return "Due in " + diffInDays + " days";
     }
 
     public Calendar reduceDateToDay(Calendar cal) {

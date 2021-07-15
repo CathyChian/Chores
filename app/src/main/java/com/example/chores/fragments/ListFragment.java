@@ -59,7 +59,7 @@ public class ListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
-        ((MainActivity) getActivity()).setSupportActionBar(binding.tbList);
+        ((MainActivity) getActivity()).setSupportActionBar(binding.toolbar);
 
         chores = new ArrayList<>();
         adapter = new ListAdapter(getContext(), ListFragment.this, chores);

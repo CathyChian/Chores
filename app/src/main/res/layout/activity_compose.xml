@@ -53,7 +53,7 @@
         android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/tbtnRecurring"
         android:ems="10"
-        android:hint="Frequency"
+        android:hint="Frequency/Date Due"
         android:inputType="textPersonName" />
 
 </RelativeLayout>

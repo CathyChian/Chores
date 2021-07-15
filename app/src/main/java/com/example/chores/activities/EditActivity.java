@@ -35,9 +35,7 @@ public class EditActivity extends AppCompatActivity {
         binding.etName.setText(chore.getName());
         binding.etDescription.setText(chore.getDescription());
         binding.tbtnRecurring.setChecked(chore.isRecurring());
-        if (chore.getFrequency() != null) {
-            binding.etFrequency.setText(String.valueOf(chore.getFrequency().intValue()));
-        }
+        binding.etFrequency.setText(String.valueOf(chore.getFrequency()));
 
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
