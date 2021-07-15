@@ -1,6 +1,5 @@
 package com.example.chores.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -9,15 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chores.activities.ChoreDetailsActivity;
-import com.example.chores.activities.MainActivity;
 import com.example.chores.databinding.ItemChoreBinding;
 import com.example.chores.fragments.ListFragment;
 import com.example.chores.models.Chore;
@@ -107,7 +101,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             Intent intent = new Intent(context, ChoreDetailsActivity.class);
             intent.putExtra("chore", Parcels.wrap(chore));
             intent.putExtra("position", getAdapterPosition());
-            fragment.startActivityForResult(intent, fragment.DELETE_REQUEST_CODE);
+            fragment.startActivityForResult(intent, fragment.UPDATE_REQUEST_CODE);
 
             // TODO: Update adapter after editing chore
         }

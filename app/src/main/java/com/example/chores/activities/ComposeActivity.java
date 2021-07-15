@@ -54,6 +54,7 @@ public class ComposeActivity extends AppCompatActivity {
 
                         Intent intent = new Intent();
                         intent.putExtra("chore", Parcels.wrap(chore));
+                        intent.putExtra("position", 0);
                         setResult(RESULT_OK, intent);
                         finish();
                     }

@@ -1,13 +1,8 @@
 package com.example.chores.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -45,7 +40,7 @@ public class ListFragment extends Fragment {
     public static final String TAG = "PostsFragment";
     public static final int ADD_REQUEST_CODE = 7;
     public static final int DELETE_REQUEST_CODE = 8;
-    public static final int EDIT_REQUEST_CODE = 9;
+    public static final int UPDATE_REQUEST_CODE = 9;
     FragmentListBinding binding;
 
     protected ListAdapter adapter;
@@ -64,7 +59,7 @@ public class ListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
-        ((MainActivity) getActivity()).setSupportActionBar(binding.toolbar);
+        ((MainActivity) getActivity()).setSupportActionBar(binding.tbList);
 
         chores = new ArrayList<>();
         adapter = new ListAdapter(getContext(), ListFragment.this, chores);
@@ -89,13 +84,13 @@ public class ListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_list, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.miCompose) {
+        if (item.getItemId() == R.id.miEdit) {
             compose();
             return true;
         }
@@ -110,26 +105,24 @@ public class ListFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == ADD_REQUEST_CODE && resultCode == RESULT_OK) {
-            Chore chore = Parcels.unwrap((data.getParcelableExtra("chore")));
-            chores.add(0, chore);
-            adapter.notifyItemInserted(0);
-            binding.rvList.smoothScrollToPosition(0);
-            Log.i(TAG, "onActivityResult: add, name: " + chore.getName());
-        }
-        if (requestCode == DELETE_REQUEST_CODE && resultCode == RESULT_OK) {
-            int position = data.getIntExtra("position", -1);
-            chores.remove(position);
-            adapter.notifyItemRemoved(position);
-            binding.rvList.smoothScrollToPosition(position);
-            Log.i(TAG, "onActivityResult: delete, position: " + position);
-        }
-        if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             Chore chore = Parcels.unwrap((data.getParcelableExtra("chore")));
             int position = data.getIntExtra("position", -1);
-            adapter.notifyItemChanged(position);
+            String operation = data.getStringExtra("operation");
+            Log.i(TAG, "onActivityResult, Chore: " + chore.getName() + ", description: " + chore.getDescription() + ", username: " + chore.getUser().getUsername());
+
+            if (requestCode == ADD_REQUEST_CODE) {
+                chores.add(0, chore);
+                adapter.notifyItemInserted(0);
+            } else if (requestCode == UPDATE_REQUEST_CODE && operation.equals("update")) {
+                chores.set(position, chore);
+                adapter.notifyItemChanged(position);
+            } else {
+                // else either delete request code or operation is "delete"
+                chores.remove(position);
+                adapter.notifyItemRemoved(position);
+            }
             binding.rvList.smoothScrollToPosition(position);
-            Log.i(TAG, "onActivityResult: edit, name: " + chore.getName());
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -149,7 +142,7 @@ public class ListFragment extends Fragment {
                 }
 
                 for (Chore chore : chores) {
-                    Log.i(TAG, "Chore: " + chore.getDescription() + ", username: " + chore.getUser().getUsername());
+                    Log.i(TAG, "Chore: " + chore.getName() + ", description: " + chore.getDescription() + ", username: " + chore.getUser().getUsername());
                 }
 
                 adapter.clear();
