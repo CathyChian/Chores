@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,15 +39,27 @@ public class ChoreDetailsActivity extends AppCompatActivity {
         position = getIntent().getIntExtra("position", -1);
         Log.i(TAG, "Showing " + chore.getName() + " chore. Description: " + chore.getDescription());
 
-        binding.tvName.setText(chore.getName());
-        binding.tvDescription.setText(chore.getDescription());
-        binding.tvRecurring.setText(chore.getRecurringText());
+        setViews();
 
         binding.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chore.deleteInBackground();
                 passBackChore("delete");
+            }
+        });
+
+        binding.btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (chore.isRecurring()) {
+                    chore.setDateDue();
+                    chore.saveInBackground();
+                    setViews();
+                } else {
+                    chore.deleteInBackground();
+                    passBackChore("delete");
+                }
             }
         });
     }
@@ -79,17 +92,18 @@ public class ChoreDetailsActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == ListFragment.UPDATE_REQUEST_CODE && resultCode == RESULT_OK) {
             chore = Parcels.unwrap((data.getParcelableExtra("chore")));
-            refresh(chore);
+            setViews();
             Log.i(TAG, "onActivityResult: edit, name: " + chore.getName());
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     // TODO: Add pull to refresh to detailed view
-    public void refresh(Chore chore) {
+    public void setViews() {
         binding.tvName.setText(chore.getName());
         binding.tvDescription.setText(chore.getDescription());
         binding.tvRecurring.setText(chore.getRecurringText());
+        binding.tvDateDue.setText(chore.getRelativeDateText());
     }
 
     public void launchEdit() {

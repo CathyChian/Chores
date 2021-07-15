@@ -56,4 +56,12 @@
         android:layout_below="@+id/tvRecurring"
         android:layout_alignParentEnd="true"
         tools:text="Due in 3 days" />
+
+    <Button
+        android:id="@+id/btnDone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDateDue"
+        android:layout_alignParentStart="true"
+        android:text="Mark as done" />
 </RelativeLayout>
