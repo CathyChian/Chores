@@ -87,7 +87,7 @@ public class Chore extends ParseObject {
     }
 
     public void setDateDue(Calendar dueDay, int offset) {
-        reduceDateToDay(dueDay);
+        ChoreObject.reduceDateToDay(dueDay);
         dueDay.setTimeInMillis(dueDay.getTimeInMillis() + TimeUnit.DAYS.toMillis(offset));
         put("dateDue", dueDay.getTime());
     }
@@ -110,7 +110,7 @@ public class Chore extends ParseObject {
     }
 
     public String getRelativeDateText() {
-        long diffInMillis = getDateDue().getTime() - reduceDateToDay(Calendar.getInstance()).getTimeInMillis();
+        long diffInMillis = getDateDue().getTime() - ChoreObject.reduceDateToDay(Calendar.getInstance()).getTimeInMillis();
         int diffInDays = (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
 
         if (diffInDays < -1)
@@ -125,70 +125,15 @@ public class Chore extends ParseObject {
         return "Due in " + diffInDays + " days";
     }
 
-    public Calendar reduceDateToDay(Calendar cal) {
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal;
+    public void addUser(String username) {
+        ChoreObject.addUser(this, getSharedUsers(), "sharedWith", username);
     }
 
-    public void addSharedUser(String username) {
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereEqualTo("username", username);
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> users, ParseException e){
-                if (e != null) {
-                    Log.e(TAG, "Issue with finding user", e);
-                    return;
-                }
-                Log.i(TAG, "User objectId: " + users.get(0).getObjectId());
-
-                addSharedUser(username, users.get(0).getObjectId());
-            }
-        });
-    }
-
-    public void addSharedUser(String username, String objectId) {
-        JSONArray sharedUsers = getSharedUsers();
-        JSONObject user = new JSONObject();
-        try {
-            user.put("username", username);
-            user.put("objectId", objectId);
-        } catch (JSONException e) {
-            Log.e(TAG, "Json exception: " + e, e);
-        }
-        sharedUsers.put(user);
-        put("sharedUsers", sharedUsers);
-        saveInBackground();
-    }
-
-    public String getSharedUsersText() {
-        List<String> list = getSharedUsernames();
-
+    public String getListOfUsers() {
+        List<String> list = ChoreObject.getUsernames(getSharedUsers());
         if (list.size() == 0) {
             return "";
         }
-
-        String text = "Shared with: ";
-        for (int i = 0; i < list.size(); i++) {
-            text += list.get(i) + " ";
-        }
-        return text;
-    }
-
-    public List<String> getSharedUsernames() {
-        JSONArray sharedUsers = getSharedUsers();
-        List<String> list = new ArrayList<String>();
-
-        for (int i = 0; i < sharedUsers.length(); i++) {
-            try {
-                list.add(sharedUsers.getJSONObject(i).getString("username"));
-            } catch (JSONException e) {
-                Log.e(TAG, "Json exception: " + e, e);
-            }
-        }
-        return list;
+        return "Shared with: " + ChoreObject.getListOfUsers(list);
     }
 }

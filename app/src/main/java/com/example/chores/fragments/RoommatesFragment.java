@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.example.chores.R;
 import com.example.chores.databinding.FragmentListBinding;
 import com.example.chores.databinding.FragmentRoommatesBinding;
+import com.example.chores.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -31,6 +32,7 @@ public class RoommatesFragment extends Fragment {
 
     public static final String TAG = "PostsFragment";
     FragmentRoommatesBinding binding;
+    User currentUser;
 
     public RoommatesFragment() {}
 
@@ -45,77 +47,15 @@ public class RoommatesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.tvRoommates.setText(getRoommatesText());
+        currentUser = (User) ParseUser.getCurrentUser();
+        binding.tvRoommates.setText(currentUser.getListOfUsers());
 
         binding.btnRoommates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveRoommate(binding.etRoommates.getText().toString());
-                ParseUser.getCurrentUser().put("roommates", binding.etRoommates.getText().toString());
-                ParseUser.getCurrentUser().saveInBackground();
+                currentUser.addUser(binding.etRoommates.getText().toString());
+                binding.tvRoommates.setText(currentUser.getListOfUsers());
             }
         });
-    }
-
-    public void saveRoommate(String username) {
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereEqualTo("username", username);
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> users, ParseException e){
-                if (e != null) {
-                    Log.e(TAG, "Issue with finding user", e);
-                    return;
-                }
-                Log.i(TAG, "User objectId: " + users.get(0).getObjectId());
-
-                ParseUser currentUser = ParseUser.getCurrentUser();
-                JSONArray roommates = currentUser.getJSONArray("roommates");
-                if (roommates == null) {
-                    roommates = new JSONArray();
-                }
-
-                JSONObject user = new JSONObject();
-                try {
-                    user.put("username", username);
-                    user.put("objectId", users.get(0).getObjectId());
-                } catch (JSONException jsonException) {
-                    Log.e(TAG, "Json exception: " + jsonException, jsonException);
-                }
-                roommates.put(user);
-                currentUser.put("roommates", roommates);
-                currentUser.saveInBackground();
-
-                binding.tvRoommates.setText(getRoommatesText());
-            }
-        });
-    }
-
-    public String getRoommatesText() {
-        List<String> list = getRoommatesUsernames();
-
-        if (list.size() == 0) {
-            return "";
-        }
-
-        String text = "Roommates with: ";
-        for (int i = 0; i < list.size(); i++) {
-            text += list.get(i) + " ";
-        }
-        return text;
-    }
-
-    public List<String> getRoommatesUsernames() {
-        JSONArray roommates = ParseUser.getCurrentUser().getJSONArray("roommates");
-        List<String> list = new ArrayList<String>();
-
-        for (int i = 0; i < roommates.length(); i++) {
-            try {
-                list.add(roommates.getJSONObject(i).getString("username"));
-            } catch (JSONException e) {
-                Log.e(TAG, "Json exception: " + e, e);
-            }
-        }
-        return list;
     }
 }

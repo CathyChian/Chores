@@ -11,11 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.chores.databinding.ActivityComposeBinding;
 import com.example.chores.databinding.ActivityLoginBinding;
 import com.example.chores.models.Chore;
+import com.example.chores.models.ChoreObject;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
 import org.parceler.Parcels;
 
 import java.util.Calendar;
@@ -38,7 +40,8 @@ public class EditActivity extends AppCompatActivity {
         binding.etDescription.setText(chore.getDescription());
         binding.tbtnRecurring.setChecked(chore.isRecurring());
         binding.etFrequency.setText(String.valueOf(chore.getFrequency()));
-        binding.etSharedUsers.setText(chore.getSharedUsernames().get(0));
+        // TODO: Get more than one user and protect against no user
+        binding.etSharedUsers.setText(ChoreObject.getUsernames(chore.getSharedUsers()).get(0));
 
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +53,7 @@ public class EditActivity extends AppCompatActivity {
                 // TODO: Maybe ask if user wants to change due date?
 
                 // TODO: Update whole list instead of just adding
-                chore.addSharedUser(binding.etSharedUsers.getText().toString());
+                chore.addUser(binding.etSharedUsers.getText().toString());
 
                 chore.saveInBackground(new SaveCallback() {
                     @Override

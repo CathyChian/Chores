@@ -89,7 +89,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             tvDescription.setText(chore.getDescription());
             tvRecurring.setText(chore.getRecurringText());
             tvDateDue.setText(chore.getRelativeDateText());
-            tvSharedUsers.setText(chore.getSharedUsersText());
+            tvSharedUsers.setText(chore.getListOfUsers());
 
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override

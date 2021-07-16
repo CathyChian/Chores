@@ -1,6 +1,7 @@
 package com.example.chores;
 
 import com.example.chores.models.Chore;
+import com.example.chores.models.User;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -14,6 +15,7 @@ public class ParseApplication extends Application {
         super.onCreate();
 
         ParseObject.registerSubclass(Chore.class);
+        ParseObject.registerSubclass(User.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId("N5bepRnqADIqEaYwRTjIYZOFPKwjo8tFJ1dBR4W6")
