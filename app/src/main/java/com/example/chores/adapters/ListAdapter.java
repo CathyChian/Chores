@@ -70,6 +70,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         private ImageView ivDelete;
         private TextView tvRecurring;
         private TextView tvDateDue;
+        private TextView tvSharedUsers;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,6 +79,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             ivDelete = binding.ivDelete;
             tvRecurring = binding.tvRecurring;
             tvDateDue = binding.tvDateDue;
+            tvSharedUsers = binding.tvSharedUsers;
 
             itemView.setOnClickListener(this);
         }
@@ -87,6 +89,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             tvDescription.setText(chore.getDescription());
             tvRecurring.setText(chore.getRecurringText());
             tvDateDue.setText(chore.getRelativeDateText());
+            tvSharedUsers.setText(chore.getSharedUsersText());
 
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -1,15 +1,23 @@
 package com.example.chores.models;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseClassName;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcel;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Parcel(analyze = Chore.class)
@@ -77,11 +85,18 @@ public class Chore extends ParseObject {
         return getDate("dateDue");
     }
 
-    public void setDateDue() {
-        Calendar dueDay = Calendar.getInstance();
-        dueDay.setTimeInMillis(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(getFrequency()));
+    public void setDateDue(Calendar dueDay, int offset) {
         reduceDateToDay(dueDay);
+        dueDay.setTimeInMillis(dueDay.getTimeInMillis() + TimeUnit.DAYS.toMillis(offset));
         put("dateDue", dueDay.getTime());
+    }
+
+    public JSONArray getSharedUsers() {
+        return getJSONArray("sharedUsers");
+    }
+
+    public void setSharedUsers(JSONArray sharedUsers) {
+        put("sharedUsers", sharedUsers);
     }
 
     public String getRecurringText() {
@@ -115,5 +130,54 @@ public class Chore extends ParseObject {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         return cal;
+    }
+
+    public void addSharedUser(String username, String objectId) {
+        JSONArray sharedUsers = getSharedUsers();
+        JSONObject user = new JSONObject();
+        try {
+            user.put("username", username);
+            user.put("objectId", objectId);
+        } catch (JSONException e) {
+            Log.e(TAG, "Json exception: " + e, e);
+        }
+        sharedUsers.put(user);
+        put("sharedUsers", sharedUsers);
+        saveInBackground();
+    }
+
+    public void addSharedUserByUsername(String username) {
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereEqualTo("username", username);
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> users, ParseException e){
+                if (e != null) {
+                    Log.e(TAG, "Issue with finding user", e);
+                    return;
+                }
+                Log.i(TAG, "User objectId: " + users.get(0).getObjectId());
+
+                addSharedUser(username, users.get(0).getObjectId());
+            }
+        });
+    }
+
+    public String getSharedUsersText() {
+        JSONArray sharedUsers = getSharedUsers();
+
+        if (sharedUsers.length() == 0) {
+            return "";
+        }
+
+        String text = "Shared with: ";
+        for (int i = 0; i < sharedUsers.length(); i++) {
+            try {
+                text += sharedUsers.getJSONObject(i).getString("username") + " ";
+            } catch (JSONException e) {
+                Log.e(TAG, "Json exception: " + e, e);
+            }
+        }
+        return text;
     }
 }

@@ -30,9 +30,9 @@
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tbtnRecurring"
+        android:layout_below="@+id/etSharedUsers"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="7dp"
         android:text="Save" />
 
     <ToggleButton
@@ -54,6 +54,16 @@
         android:layout_toEndOf="@+id/tbtnRecurring"
         android:ems="10"
         android:hint="Frequency/Date Due"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/etSharedUsers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etFrequency"
+        android:layout_alignParentStart="true"
+        android:ems="10"
+        android:hint="Shared User"
         android:inputType="textPersonName" />
 
 </RelativeLayout>

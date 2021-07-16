@@ -18,6 +18,8 @@ import com.example.chores.models.Chore;
 
 import org.parceler.Parcels;
 
+import java.util.Calendar;
+
 public class ChoreDetailsActivity extends AppCompatActivity {
 
     public static final String TAG = "ChoreDetailsActivity";
@@ -49,11 +51,12 @@ public class ChoreDetailsActivity extends AppCompatActivity {
             }
         });
 
+        // TODO: Better indicator to user when chore is marked done
         binding.btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (chore.isRecurring()) {
-                    chore.setDateDue();
+                    chore.setDateDue(Calendar.getInstance(), chore.getFrequency());
                     chore.saveInBackground();
                     setViews();
                 } else {

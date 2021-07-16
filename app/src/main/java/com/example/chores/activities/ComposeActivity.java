@@ -16,8 +16,10 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
 import org.parceler.Parcels;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class ComposeActivity extends AppCompatActivity {
@@ -40,7 +42,10 @@ public class ComposeActivity extends AppCompatActivity {
                 chore.setUser(ParseUser.getCurrentUser());
                 chore.setRecurring(binding.tbtnRecurring.isChecked());
                 chore.setFrequency(binding.etFrequency.getText().toString());
-                chore.setDateDue();
+                chore.setDateDue(Calendar.getInstance(), chore.getFrequency());
+                chore.setSharedUsers(new JSONArray());
+                // TODO: Add ability to share with more than one user
+                chore.addSharedUserByUsername(binding.etSharedUsers.getText().toString());
 
                 chore.saveInBackground(new SaveCallback() {
                     @Override
@@ -54,6 +59,7 @@ public class ComposeActivity extends AppCompatActivity {
                         binding.etDescription.setText("");
                         binding.tbtnRecurring.setChecked(false);
                         binding.etFrequency.setText("");
+                        binding.etSharedUsers.setText("");
 
                         Intent intent = new Intent();
                         intent.putExtra("chore", Parcels.wrap(chore));

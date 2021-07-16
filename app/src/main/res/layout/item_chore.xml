@@ -50,4 +50,13 @@
         android:layout_below="@+id/tvRecurring"
         android:layout_alignParentEnd="true"
         tools:text="Due in 3 days" />
+
+    <TextView
+        android:id="@+id/tvSharedUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDescription"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        tools:text="Shared with billy" />
 </RelativeLayout>
