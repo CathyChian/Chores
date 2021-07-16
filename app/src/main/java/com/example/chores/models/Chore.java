@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -132,21 +133,7 @@ public class Chore extends ParseObject {
         return cal;
     }
 
-    public void addSharedUser(String username, String objectId) {
-        JSONArray sharedUsers = getSharedUsers();
-        JSONObject user = new JSONObject();
-        try {
-            user.put("username", username);
-            user.put("objectId", objectId);
-        } catch (JSONException e) {
-            Log.e(TAG, "Json exception: " + e, e);
-        }
-        sharedUsers.put(user);
-        put("sharedUsers", sharedUsers);
-        saveInBackground();
-    }
-
-    public void addSharedUserByUsername(String username) {
+    public void addSharedUser(String username) {
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereEqualTo("username", username);
         query.findInBackground(new FindCallback<ParseUser>() {
@@ -163,21 +150,45 @@ public class Chore extends ParseObject {
         });
     }
 
-    public String getSharedUsersText() {
+    public void addSharedUser(String username, String objectId) {
         JSONArray sharedUsers = getSharedUsers();
+        JSONObject user = new JSONObject();
+        try {
+            user.put("username", username);
+            user.put("objectId", objectId);
+        } catch (JSONException e) {
+            Log.e(TAG, "Json exception: " + e, e);
+        }
+        sharedUsers.put(user);
+        put("sharedUsers", sharedUsers);
+        saveInBackground();
+    }
 
-        if (sharedUsers.length() == 0) {
+    public String getSharedUsersText() {
+        List<String> list = getSharedUsernames();
+
+        if (list.size() == 0) {
             return "";
         }
 
         String text = "Shared with: ";
+        for (int i = 0; i < list.size(); i++) {
+            text += list.get(i) + " ";
+        }
+        return text;
+    }
+
+    public List<String> getSharedUsernames() {
+        JSONArray sharedUsers = getSharedUsers();
+        List<String> list = new ArrayList<String>();
+
         for (int i = 0; i < sharedUsers.length(); i++) {
             try {
-                text += sharedUsers.getJSONObject(i).getString("username") + " ";
+                list.add(sharedUsers.getJSONObject(i).getString("username"));
             } catch (JSONException e) {
                 Log.e(TAG, "Json exception: " + e, e);
             }
         }
-        return text;
+        return list;
     }
 }

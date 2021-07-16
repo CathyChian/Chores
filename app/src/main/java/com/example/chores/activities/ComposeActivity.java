@@ -45,7 +45,7 @@ public class ComposeActivity extends AppCompatActivity {
                 chore.setDateDue(Calendar.getInstance(), chore.getFrequency());
                 chore.setSharedUsers(new JSONArray());
                 // TODO: Add ability to share with more than one user
-                chore.addSharedUserByUsername(binding.etSharedUsers.getText().toString());
+                chore.addSharedUser(binding.etSharedUsers.getText().toString());
 
                 chore.saveInBackground(new SaveCallback() {
                     @Override

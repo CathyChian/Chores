@@ -18,6 +18,8 @@ import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
+import java.util.Calendar;
+
 public class EditActivity extends AppCompatActivity {
 
     public static final String TAG = "EditActivity";
@@ -36,6 +38,7 @@ public class EditActivity extends AppCompatActivity {
         binding.etDescription.setText(chore.getDescription());
         binding.tbtnRecurring.setChecked(chore.isRecurring());
         binding.etFrequency.setText(String.valueOf(chore.getFrequency()));
+        binding.etSharedUsers.setText(chore.getSharedUsernames().get(0));
 
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,8 +46,11 @@ public class EditActivity extends AppCompatActivity {
                 chore.setName(binding.etName.getText().toString());
                 chore.setDescription(binding.etDescription.getText().toString());
                 chore.setRecurring(binding.tbtnRecurring.isChecked());
-                if (binding.tbtnRecurring.isChecked())
-                    chore.setFrequency(binding.etFrequency.getText().toString());
+                chore.setFrequency(binding.etFrequency.getText().toString());
+                // TODO: Maybe ask if user wants to change due date?
+
+                // TODO: Update whole list instead of just adding
+                chore.addSharedUser(binding.etSharedUsers.getText().toString());
 
                 chore.saveInBackground(new SaveCallback() {
                     @Override
