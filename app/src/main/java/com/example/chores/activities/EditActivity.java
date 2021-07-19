@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.parceler.Parcels;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -40,8 +41,12 @@ public class EditActivity extends AppCompatActivity {
         binding.etDescription.setText(chore.getDescription());
         binding.tbtnRecurring.setChecked(chore.isRecurring());
         binding.etFrequency.setText(String.valueOf(chore.getFrequency()));
-        // TODO: Get more than one user and protect against no user
-        binding.etSharedUsers.setText(ChoreObject.getUsernames(chore.getSharedUsers()).get(0));
+
+        // TODO: Get more than one user
+        List<String> usernames = ChoreObject.getUsernames(chore.getSharedUsers());
+        if (usernames != null) {
+            binding.etSharedUsers.setText(ChoreObject.getUsernames(chore.getSharedUsers()).get(0));
+        }
 
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,9 +56,7 @@ public class EditActivity extends AppCompatActivity {
                 chore.setRecurring(binding.tbtnRecurring.isChecked());
                 chore.setFrequency(binding.etFrequency.getText().toString());
                 // TODO: Maybe ask if user wants to change due date?
-
-                // TODO: Update whole list instead of just adding
-                chore.addUser(binding.etSharedUsers.getText().toString());
+                chore.addUser(binding.etSharedUsers.getText().toString(), EditActivity.this);
 
                 chore.saveInBackground(new SaveCallback() {
                     @Override

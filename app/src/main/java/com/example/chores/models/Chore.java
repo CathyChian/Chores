@@ -1,21 +1,14 @@
 package com.example.chores.models;
 
-import android.util.Log;
-import android.widget.Toast;
+import android.content.Context;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseClassName;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -125,13 +118,13 @@ public class Chore extends ParseObject {
         return "Due in " + diffInDays + " days";
     }
 
-    public void addUser(String username) {
-        ChoreObject.addUser(this, getSharedUsers(), "sharedWith", username);
+    public void addUser(String username, Context context) {
+        ChoreObject.addUser(context, this, getSharedUsers(), "sharedUsers", username);
     }
 
     public String getListOfUsers() {
         List<String> list = ChoreObject.getUsernames(getSharedUsers());
-        if (list.size() == 0) {
+        if (list == null || list.size() == 0) {
             return "";
         }
         return "Shared with: " + ChoreObject.getListOfUsers(list);

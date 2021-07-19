@@ -53,7 +53,7 @@ public class RoommatesFragment extends Fragment {
         binding.btnRoommates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentUser.addUser(binding.etRoommates.getText().toString());
+                currentUser.addUser(binding.etRoommates.getText().toString(), getContext());
                 binding.tvRoommates.setText(currentUser.getListOfUsers());
             }
         });

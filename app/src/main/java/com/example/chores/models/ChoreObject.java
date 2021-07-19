@@ -1,10 +1,10 @@
 package com.example.chores.models;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
-import com.parse.Parse;
-import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -30,27 +30,37 @@ public class ChoreObject {
         return cal;
     }
 
-    public static void addUser(ParseObject object, JSONArray jsonArray, final String KEY, String username) {
+    public static void addUser(Context context, ParseObject object, JSONArray jsonArray, final String KEY, String username) {
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereEqualTo("username", username);
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
-            public void done(List<ParseUser> users, ParseException e){
+            public void done(List<ParseUser> users, ParseException e) {
                 if (e != null || users.size() == 0) {
+                    // TODO: Better handle when user isn't found
                     Log.e(TAG, "Issue with finding user", e);
                     return;
                 }
                 Log.i(TAG, "User objectId: " + users.get(0).getObjectId());
 
-                addUser(object, jsonArray, KEY, username, users.get(0).getObjectId());
+                addUser(context, object, jsonArray, KEY, username, users.get(0).getObjectId());
             }
         });
     }
 
-    public static void addUser(ParseObject object, JSONArray jsonArray, final String KEY, String username, String objectId) {
+    public static void addUser(Context context, ParseObject object, JSONArray jsonArray, final String KEY, String username, String objectId) {
+        for (String s : getObjectIds(jsonArray)) {
+            if (s.equals(objectId)) {
+                Toast.makeText(context, username + " already added", Toast.LENGTH_LONG).show();
+                Log.i(TAG, username + " already added, objectId: " + objectId);
+                return;
+            }
+        }
+
         if (jsonArray == null) {
             jsonArray = new JSONArray();
         }
+
         JSONObject user = new JSONObject();
         try {
             user.put("username", username);
@@ -64,6 +74,23 @@ public class ChoreObject {
     }
 
     public static List<String> getUsernames(JSONArray jsonArray) {
+        if (jsonArray == null) {
+            return null;
+        }
+
+        List<String> list = new ArrayList<String>();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                list.add(jsonArray.getJSONObject(i).getString("username"));
+            } catch (JSONException e) {
+                Log.e(TAG, "Json exception: " + e, e);
+            }
+        }
+        return list;
+    }
+
+    public static List<String> getObjectIds(JSONArray jsonArray) {
         List<String> list = new ArrayList<String>();
 
         if (jsonArray == null) {
@@ -72,7 +99,7 @@ public class ChoreObject {
 
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
-                list.add(jsonArray.getJSONObject(i).getString("username"));
+                list.add(jsonArray.getJSONObject(i).getString("objectId"));
             } catch (JSONException e) {
                 Log.e(TAG, "Json exception: " + e, e);
             }

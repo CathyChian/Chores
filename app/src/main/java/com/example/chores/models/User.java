@@ -1,5 +1,9 @@
 package com.example.chores.models;
 
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.parse.ParseClassName;
 import com.parse.ParseUser;
 
@@ -11,6 +15,8 @@ import java.util.List;
 @Parcel(analyze = User.class)
 @ParseClassName("_User")
 public class User extends ParseUser {
+
+    private static final String TAG = "User";
 
     public User() {
     }
@@ -31,7 +37,7 @@ public class User extends ParseUser {
         return "Roommates with: " + ChoreObject.getListOfUsers(list);
     }
 
-    public void addUser(String username) {
-        ChoreObject.addUser(this, getRoommates(), "roommates", username);
+    public void addUser(String username, Context context) {
+        ChoreObject.addUser(context, this, getRoommates(), "roommates", username);
     }
 }

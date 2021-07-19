@@ -9,18 +9,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chores.databinding.ActivityComposeBinding;
-import com.example.chores.databinding.ActivityLoginBinding;
 import com.example.chores.models.Chore;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import org.json.JSONArray;
 import org.parceler.Parcels;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class ComposeActivity extends AppCompatActivity {
 
@@ -44,7 +40,7 @@ public class ComposeActivity extends AppCompatActivity {
                 chore.setFrequency(binding.etFrequency.getText().toString());
                 chore.setDateDue(Calendar.getInstance(), chore.getFrequency());
                 // TODO: Add ability to share with more than one user
-                chore.addUser(binding.etSharedUsers.getText().toString());
+                chore.addUser(binding.etSharedUsers.getText().toString(), ComposeActivity.this);
 
                 chore.saveInBackground(new SaveCallback() {
                     @Override
@@ -69,6 +65,5 @@ public class ComposeActivity extends AppCompatActivity {
                 });
             }
         });
-
     }
 }
