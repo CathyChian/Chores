@@ -71,7 +71,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
         private TextView tvName;
         private TextView tvDescription;
-        private ImageView ivDelete;
         private TextView tvRecurring;
         private TextView tvDateDue;
         private TextView tvSharedUsers;
@@ -83,7 +82,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             super(itemView);
             tvName = binding.tvName;
             tvDescription = binding.tvDescription;
-            ivDelete = binding.ivDelete;
             tvRecurring = binding.tvRecurring;
             tvDateDue = binding.tvDateDue;
             tvSharedUsers = binding.tvSharedUsers;
@@ -98,13 +96,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             tvRecurring.setText(chore.getRecurringText());
             tvDateDue.setText(chore.getRelativeDateText());
             tvSharedUsers.setText(chore.getListOfUsers());
-
-            ivDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    deleteChore(chore);
-                }
-            });
 
             leftIvEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
