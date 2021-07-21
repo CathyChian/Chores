@@ -21,6 +21,14 @@ public class User extends ParseUser {
     public User() {
     }
 
+    public String getEmail() {
+        return getString("email");
+    }
+
+    public void setEmail(String email) {
+        put("email", email);
+    }
+
     public JSONArray getRoommates() {
         return getJSONArray("roommates");
     }

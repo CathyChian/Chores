@@ -124,7 +124,7 @@ public class Chore extends ParseObject {
 
     public String getListOfUsers() {
         List<String> list = ChoreObject.getUsernames(getSharedUsers());
-        if (list == null || list.size() == 0) {
+        if (list == null || list.isEmpty()) {
             return "";
         }
         return "Shared with: " + ChoreObject.getListOfUsers(list);

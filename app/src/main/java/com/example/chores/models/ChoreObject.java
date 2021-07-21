@@ -36,9 +36,13 @@ public class ChoreObject {
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> users, ParseException e) {
-                if (e != null || users.size() == 0) {
-                    // TODO: Better handle when user isn't found
+                if (e != null) {
                     Log.e(TAG, "Issue with finding user", e);
+                    return;
+                }
+                if (users.isEmpty()) {
+                    Toast.makeText(context, username + " does not exist", Toast.LENGTH_LONG).show();
+                    Log.i(TAG, username + " does not exist");
                     return;
                 }
                 Log.i(TAG, "User objectId: " + users.get(0).getObjectId());
