@@ -8,6 +8,12 @@
         android:title="List"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_calendar"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_month"
+        android:title="Calendar"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_roommates"
         android:enabled="true"
         android:icon="@android:drawable/ic_menu_agenda"

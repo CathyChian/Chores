@@ -13,17 +13,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.chores.R;
 import com.example.chores.activities.ComposeActivity;
 import com.example.chores.activities.LoginActivity;
 import com.example.chores.activities.MainActivity;
 import com.example.chores.databinding.FragmentAccountBinding;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
+import com.google.api.services.calendar.CalendarScopes;
 import com.parse.ParseUser;
 
 public class AccountFragment extends Fragment {
@@ -47,9 +51,10 @@ public class AccountFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(new Scope("https://www.googleapis.com/auth/calendar"))
+                .requestScopes(new Scope(CalendarScopes.CALENDAR))
                 .requestEmail()
                 .build();
+
         googleSignInClient = GoogleSignIn.getClient(getContext(), gso);
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
@@ -73,6 +78,7 @@ public class AccountFragment extends Fragment {
 
     public void logout() {
         ParseUser.logOut();
+        googleSignInClient.signOut();
         Toast.makeText(getContext(), "Logged out!", Toast.LENGTH_SHORT).show();
         goLoginActivity();
     }

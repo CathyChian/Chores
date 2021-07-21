@@ -39,7 +39,7 @@ public class User extends ParseUser {
 
     public String getListOfUsers() {
         List<String> list = ChoreObject.getUsernames(getRoommates());
-        if (list.size() == 0) {
+        if (list == null || list.isEmpty()) {
             return "";
         }
         return "Roommates with: " + ChoreObject.getListOfUsers(list);
