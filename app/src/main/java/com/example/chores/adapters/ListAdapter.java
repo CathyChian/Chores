@@ -6,15 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chores.R;
 import com.example.chores.activities.ChoreDetailsActivity;
+import com.example.chores.activities.EditActivity;
 import com.example.chores.databinding.ItemChoreBinding;
 import com.example.chores.fragments.ListFragment;
 import com.example.chores.models.Chore;
+import com.zerobranch.layout.SwipeLayout;
 
 import org.parceler.Parcels;
 
@@ -63,7 +67,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvName;
         private TextView tvDescription;
@@ -71,6 +75,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         private TextView tvRecurring;
         private TextView tvDateDue;
         private TextView tvSharedUsers;
+        private ImageView leftIvEdit;
+        private ImageView rightIvDelete;
+        private RelativeLayout itemChore;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -80,8 +87,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             tvRecurring = binding.tvRecurring;
             tvDateDue = binding.tvDateDue;
             tvSharedUsers = binding.tvSharedUsers;
-
-            itemView.setOnClickListener(this);
+            leftIvEdit = binding.leftIvEdit;
+            rightIvDelete = binding.rightIvDelete;
+            itemChore = binding.itemChore;
         }
 
         public void bind(Chore chore) {
@@ -97,14 +105,39 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                     deleteChore(chore);
                 }
             });
+
+            leftIvEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchEdit(chore);
+                }
+            });
+
+            rightIvDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteChore(chore);
+                }
+            });
+
+            itemChore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchDetailedView(chore);
+                }
+            });
         }
 
-        @Override
-        public void onClick(View v) {
+        public void launchDetailedView(Chore chore) {
             if (getAdapterPosition() == RecyclerView.NO_POSITION) { return; }
-
-            Chore chore = chores.get(getAdapterPosition());
             Intent intent = new Intent(context, ChoreDetailsActivity.class);
+            intent.putExtra("chore", Parcels.wrap(chore));
+            intent.putExtra("position", getAdapterPosition());
+            fragment.startActivityForResult(intent, ListFragment.DETAILED_REQUEST_CODE);
+        }
+
+        public void launchEdit(Chore chore) {
+            Intent intent = new Intent(context, EditActivity.class);
             intent.putExtra("chore", Parcels.wrap(chore));
             intent.putExtra("position", getAdapterPosition());
             fragment.startActivityForResult(intent, ListFragment.UPDATE_REQUEST_CODE);

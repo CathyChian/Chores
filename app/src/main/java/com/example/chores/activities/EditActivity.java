@@ -28,6 +28,7 @@ public class EditActivity extends AppCompatActivity {
     public static final String TAG = "EditActivity";
     ActivityComposeBinding binding;
     Chore chore;
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class EditActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         chore = Parcels.unwrap(getIntent().getParcelableExtra("chore"));
+        position = getIntent().getIntExtra("position", -1);
 
         binding.etName.setText(chore.getName());
         binding.etDescription.setText(chore.getDescription());
@@ -73,6 +75,7 @@ public class EditActivity extends AppCompatActivity {
 
                         Intent intent = new Intent();
                         intent.putExtra("chore", Parcels.wrap(chore));
+                        intent.putExtra("position", position);
                         setResult(RESULT_OK, intent);
                         finish();
                     }

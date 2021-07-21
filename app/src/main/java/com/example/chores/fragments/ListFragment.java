@@ -41,7 +41,8 @@ public class ListFragment extends Fragment {
     public static final String TAG = "PostsFragment";
     public static final int ADD_REQUEST_CODE = 7;
     public static final int DELETE_REQUEST_CODE = 8;
-    public static final int UPDATE_REQUEST_CODE = 9;
+    public static final int DETAILED_REQUEST_CODE = 9;
+    public static final int UPDATE_REQUEST_CODE = 10;
     FragmentListBinding binding;
 
     protected ListAdapter adapter;
@@ -109,19 +110,26 @@ public class ListFragment extends Fragment {
         if (resultCode == RESULT_OK) {
             Chore chore = Parcels.unwrap((data.getParcelableExtra("chore")));
             int position = data.getIntExtra("position", -1);
-            String operation = data.getStringExtra("operation");
             Log.i(TAG, "onActivityResult, Chore: " + chore.getName() + ", description: " + chore.getDescription() + ", username: " + chore.getUser().getUsername());
 
             if (requestCode == ADD_REQUEST_CODE) {
                 chores.add(0, chore);
                 adapter.notifyItemInserted(0);
-            } else if (requestCode == UPDATE_REQUEST_CODE && operation.equals("update")) {
+            } else if (requestCode == UPDATE_REQUEST_CODE) {
                 chores.set(position, chore);
                 adapter.notifyItemChanged(position);
-            } else {
-                // else either delete request code or operation is "delete"
+            } else if (requestCode == DELETE_REQUEST_CODE) {
                 chores.remove(position);
                 adapter.notifyItemRemoved(position);
+            } else if (requestCode == DETAILED_REQUEST_CODE) {
+                String operation = data.getStringExtra("operation");
+                if (operation.equals("update")) {
+                    chores.set(position, chore);
+                    adapter.notifyItemChanged(position);
+                } else if (operation.equals("delete")){
+                    chores.remove(position);
+                    adapter.notifyItemRemoved(position);
+                }
             }
             binding.rvList.smoothScrollToPosition(position);
         }
