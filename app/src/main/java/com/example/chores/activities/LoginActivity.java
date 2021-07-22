@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.codepath.oauth.OAuthLoginActionBarActivity;
+import com.example.chores.GoogleCalendarClient;
 import com.example.chores.activities.MainActivity;
 import com.example.chores.databinding.ActivityLoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -21,7 +23,7 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends OAuthLoginActionBarActivity<GoogleCalendarClient> {
 
     public static final String TAG = "LoginActivity";
     ActivityLoginBinding binding;
@@ -33,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         if (ParseUser.getCurrentUser() != null) {
-            goMainActivity();
+            onLoginSuccess();
         }
 
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +53,13 @@ public class LoginActivity extends AppCompatActivity {
                 signupUser(binding.etUsername.getText().toString(), binding.etPassword.getText().toString());
             }
         });
+
+        binding.btnGoogleSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getClient().connect();
+            }
+        });
     }
 
     private void loginUser(String username, String password) {
@@ -65,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.e(TAG, "Issue with login " + e, e);
                     return;
                 }
-                goMainActivity();
+                onLoginSuccess();
                 Log.i(TAG, username + " logged in");
             }
         });
@@ -93,9 +102,15 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void goMainActivity() {
+    @Override
+    public void onLoginSuccess() {
+        Log.i(TAG, "onLoginSuccess");
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
-        finish();
+    }
+
+    @Override
+    public void onLoginFailure(Exception e) {
+        Log.i(TAG, "onLoginFailure", e);
     }
 }

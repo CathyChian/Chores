@@ -137,6 +137,11 @@ public class ListFragment extends Fragment {
     }
 
     protected void queryChores() {
+        // TODO: Remove this, just temporary for testing Google sign-in
+        if (ParseUser.getCurrentUser() == null) {
+            return;
+        }
+
         List<ParseQuery<Chore>> queries = new ArrayList<>();
 
         ParseQuery<Chore> ownedQuery = ParseQuery.getQuery(Chore.class);

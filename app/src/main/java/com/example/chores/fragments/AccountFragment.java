@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.chores.ChoresApp;
+import com.example.chores.GoogleCalendarClient;
 import com.example.chores.R;
 import com.example.chores.activities.ComposeActivity;
 import com.example.chores.activities.LoginActivity;
@@ -57,7 +59,7 @@ public class AccountFragment extends Fragment {
     public static final String TAG = "PostsFragment";
     private static final int SIGN_IN = 77;
     FragmentAccountBinding binding;
-    GoogleSignInClient googleSignInClient;
+    GoogleCalendarClient client;
 
     public AccountFragment() {}
 
@@ -71,16 +73,7 @@ public class AccountFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(new Scope(CalendarScopes.CALENDAR))
-                .requestEmail()
-                .build();
-
-        googleSignInClient = GoogleSignIn.getClient(getContext(), gso);
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
-        updateUI(account);
+        client = ChoresApp.getRestClient(getContext());
 
         binding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,18 +82,11 @@ public class AccountFragment extends Fragment {
                 logout();
             }
         });
-
-        binding.btnGoogleSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
     }
 
     public void logout() {
         ParseUser.logOut();
-        googleSignInClient.signOut();
+        client.clearAccessToken();
         Toast.makeText(getContext(), "Logged out!", Toast.LENGTH_SHORT).show();
         goLoginActivity();
     }
@@ -108,36 +94,6 @@ public class AccountFragment extends Fragment {
     private void goLoginActivity() {
         Intent i = new Intent(getActivity(), LoginActivity.class);
         startActivity(i);
-    }
-
-    private void signIn() {
-        Intent signInIntent = googleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, SIGN_IN);
-    }
-
-    private void updateUI(GoogleSignInAccount account) {
-        if (account == null) {
-            binding.btnGoogleSignIn.setVisibility(View.VISIBLE);
-            binding.tvEmail.setText("");
-        } else {
-            binding.btnGoogleSignIn.setVisibility(View.INVISIBLE);
-            binding.tvEmail.setText(account.getEmail());
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                ParseUser.getCurrentUser().setEmail(account.getEmail());
-                updateUI(account);
-            } catch (ApiException e) {
-                Log.e(TAG, "signInResult:failed code=" + e.getStatusCode());
-            }
-        }
     }
 }
 

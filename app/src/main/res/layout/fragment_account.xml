@@ -10,23 +10,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Logout" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/btnGoogleSignIn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnLogout"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:visibility="visible" />
-
-    <TextView
-        android:id="@+id/tvEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnLogout"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/btnGoogleSignIn"
-        tools:text="Logged in with chiancathy@gmail.com" />
 </RelativeLayout>
