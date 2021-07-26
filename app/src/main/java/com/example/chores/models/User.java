@@ -1,8 +1,6 @@
 package com.example.chores.models;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.parse.ParseClassName;
 import com.parse.ParseUser;
@@ -35,6 +33,14 @@ public class User extends ParseUser {
 
     public void setRoommates(JSONArray roommates) {
         put("roommates", roommates);
+    }
+
+    public String getCalendarId() {
+        return getString("calendarId");
+    }
+
+    public void setCalendarId(String calendarId) {
+        put("calendarId", calendarId);
     }
 
     public String getListOfUsers() {

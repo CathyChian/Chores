@@ -6,18 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 import com.example.chores.GoogleCalendarClient;
-import com.example.chores.activities.MainActivity;
 import com.example.chores.databinding.ActivityLoginBinding;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -35,7 +26,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<GoogleCalendarCli
         setContentView(binding.getRoot());
 
         if (ParseUser.getCurrentUser() != null) {
-            onLoginSuccess();
+            goMainActivity();
         }
 
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +65,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<GoogleCalendarCli
                     Log.e(TAG, "Issue with login " + e, e);
                     return;
                 }
-                onLoginSuccess();
+                goMainActivity();
                 Log.i(TAG, username + " logged in");
             }
         });
@@ -102,11 +93,14 @@ public class LoginActivity extends OAuthLoginActionBarActivity<GoogleCalendarCli
         });
     }
 
+    public void goMainActivity() {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+    }
+
     @Override
     public void onLoginSuccess() {
         Log.i(TAG, "onLoginSuccess");
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
     }
 
     @Override

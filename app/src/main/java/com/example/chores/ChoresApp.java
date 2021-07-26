@@ -7,6 +7,7 @@ import androidx.room.Room;
 
 import com.example.chores.GoogleCalendarClient;
 import com.facebook.stetho.Stetho;
+import com.github.scribejava.core.model.Token;
 
 public class ChoresApp extends Application {
 
