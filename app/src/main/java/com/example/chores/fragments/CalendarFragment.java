@@ -20,7 +20,6 @@ import com.example.chores.activities.MainActivity;
 import com.example.chores.databinding.FragmentCalendarBinding;
 import com.example.chores.models.Chore;
 import com.example.chores.models.ChoreEvent;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.parceler.Parcels;
 
