@@ -77,7 +77,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
             passBackChore("update");
             return true;
         }
-        if (item.getItemId() == R.id.miEdit) {
+        if (item.getItemId() == R.id.miCompose) {
             launchEdit();
             return true;
         }

@@ -42,7 +42,7 @@ public class ListFragment extends Fragment {
     FragmentListBinding binding;
 
     public static ListAdapter adapter;
-    protected List<Chore> chores;
+    public static List<Chore> chores;
 
     public ListFragment() {}
 
@@ -67,6 +67,11 @@ public class ListFragment extends Fragment {
         binding.rvList.setLayoutManager(linearLayoutManager);
         queryChores();
 
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            binding.rvList.scrollToPosition(bundle.getInt("position", 0));
+        }
+
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -88,7 +93,7 @@ public class ListFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.miEdit) {
+        if (item.getItemId() == R.id.miCompose) {
             compose();
             return true;
         }
