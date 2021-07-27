@@ -11,11 +11,62 @@
         android:layout_height="wrap_content"
         android:text="Logout" />
 
-    <TextView
-        android:id="@+id/tvEmail"
+    <EditText
+        android:id="@+id/etCalendarTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnLogout"
         android:layout_alignParentStart="true"
-        tools:text="chiancathy@gmail.com" />
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Calendar Title"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/btnNewCalendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etCalendarTitle"
+        android:layout_alignParentStart="true"
+        android:text="Create New Google Calendar" />
+
+    <Button
+        android:id="@+id/btnGetCalendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnNewCalendar"
+        android:text="Get User's Calendar" />
+
+    <TextView
+        android:id="@+id/tvCalendarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnGetCalendar"
+        tools:text="Calendar Title" />
+
+    <TextView
+        android:id="@+id/tvCalendarId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvCalendarTitle"
+        tools:text="id: fglksgfsd" />
+
+    <Button
+        android:id="@+id/btnNewEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etEventTitle"
+        android:layout_alignParentStart="true"
+        android:text="Create New Event" />
+
+    <EditText
+        android:id="@+id/etEventTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvCalendarId"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="92dp"
+        android:ems="10"
+        android:hint="Event Title"
+        android:inputType="textPersonName" />
 </RelativeLayout>

@@ -2,13 +2,6 @@ package com.example.chores.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,14 +10,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.chores.R;
 import com.example.chores.activities.ComposeActivity;
 import com.example.chores.activities.MainActivity;
 import com.example.chores.adapters.ListAdapter;
 import com.example.chores.databinding.FragmentListBinding;
 import com.example.chores.models.Chore;
+import com.example.chores.models.ChoreEvent;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -32,6 +31,7 @@ import com.parse.ParseUser;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -39,13 +39,9 @@ import static android.app.Activity.RESULT_OK;
 public class ListFragment extends Fragment {
 
     public static final String TAG = "PostsFragment";
-    public static final int ADD_REQUEST_CODE = 7;
-    public static final int DELETE_REQUEST_CODE = 8;
-    public static final int DETAILED_REQUEST_CODE = 9;
-    public static final int UPDATE_REQUEST_CODE = 10;
     FragmentListBinding binding;
 
-    protected ListAdapter adapter;
+    public static ListAdapter adapter;
     protected List<Chore> chores;
 
     public ListFragment() {}
@@ -102,32 +98,40 @@ public class ListFragment extends Fragment {
     public void compose() {
         Log.i(TAG, "onClick new chore button");
         Intent i = new Intent(getContext(), ComposeActivity.class);
-        startActivityForResult(i, ADD_REQUEST_CODE);
+        startActivityForResult(i, MainActivity.ADD_REQUEST_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
             Chore chore = Parcels.unwrap((data.getParcelableExtra("chore")));
+            Calendar dateDue = Calendar.getInstance();
+            dateDue.setTime(chore.getDateDue());
+
             int position = data.getIntExtra("position", -1);
             Log.i(TAG, "onActivityResult, Chore: " + chore.getName() + ", description: " + chore.getDescription() + ", username: " + chore.getUser().getUsername());
 
-            if (requestCode == ADD_REQUEST_CODE) {
+            if (requestCode == MainActivity.ADD_REQUEST_CODE) {
                 chores.add(0, chore);
+                CalendarFragment.choreEvents.add(0, new ChoreEvent(dateDue, R.drawable.event_icons));
                 adapter.notifyItemInserted(0);
-            } else if (requestCode == UPDATE_REQUEST_CODE) {
+            } else if (requestCode == MainActivity.UPDATE_REQUEST_CODE) {
                 chores.set(position, chore);
+                CalendarFragment.choreEvents.set(position, new ChoreEvent(dateDue, R.drawable.event_icons));
                 adapter.notifyItemChanged(position);
-            } else if (requestCode == DELETE_REQUEST_CODE) {
+            } else if (requestCode == MainActivity.DELETE_REQUEST_CODE) {
                 chores.remove(position);
+                CalendarFragment.choreEvents.remove(position);
                 adapter.notifyItemRemoved(position);
-            } else if (requestCode == DETAILED_REQUEST_CODE) {
+            } else if (requestCode == MainActivity.DETAILED_REQUEST_CODE) {
                 String operation = data.getStringExtra("operation");
                 if (operation.equals("update")) {
                     chores.set(position, chore);
+                    CalendarFragment.choreEvents.set(position, new ChoreEvent(dateDue, R.drawable.event_icons));
                     adapter.notifyItemChanged(position);
                 } else if (operation.equals("delete")){
                     chores.remove(position);
+                    CalendarFragment.choreEvents.remove(position);
                     adapter.notifyItemRemoved(position);
                 }
             }
@@ -163,8 +167,13 @@ public class ListFragment extends Fragment {
                     return;
                 }
 
+                CalendarFragment.choreEvents.clear();
+
                 for (Chore chore : chores) {
                     Log.i(TAG, "Chore: " + chore.getName() + ", description: " + chore.getDescription() + ", username: " + chore.getUser().getUsername());
+                    Calendar dateDue = Calendar.getInstance();
+                    dateDue.setTime(chore.getDateDue());
+                    CalendarFragment.choreEvents.add(new ChoreEvent(dateDue, R.drawable.event_icons));
                 }
 
                 adapter.clear();

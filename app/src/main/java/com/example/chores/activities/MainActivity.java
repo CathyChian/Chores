@@ -1,15 +1,13 @@
 package com.example.chores.activities;
 
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.example.chores.R;
 import com.example.chores.databinding.ActivityMainBinding;
@@ -22,6 +20,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
+    public static final int ADD_REQUEST_CODE = 7;
+    public static final int DELETE_REQUEST_CODE = 8;
+    public static final int DETAILED_REQUEST_CODE = 9;
+    public static final int UPDATE_REQUEST_CODE = 10;
     public final FragmentManager fragmentManager = getSupportFragmentManager();
     ActivityMainBinding binding;
 

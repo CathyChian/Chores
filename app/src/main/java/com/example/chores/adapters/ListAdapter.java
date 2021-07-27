@@ -12,13 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.chores.R;
 import com.example.chores.activities.ChoreDetailsActivity;
 import com.example.chores.activities.EditActivity;
+import com.example.chores.activities.MainActivity;
 import com.example.chores.databinding.ItemChoreBinding;
+import com.example.chores.fragments.CalendarFragment;
 import com.example.chores.fragments.ListFragment;
 import com.example.chores.models.Chore;
-import com.zerobranch.layout.SwipeLayout;
 
 import org.parceler.Parcels;
 
@@ -124,19 +124,20 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             Intent intent = new Intent(context, ChoreDetailsActivity.class);
             intent.putExtra("chore", Parcels.wrap(chore));
             intent.putExtra("position", getAdapterPosition());
-            fragment.startActivityForResult(intent, ListFragment.DETAILED_REQUEST_CODE);
+            fragment.startActivityForResult(intent, MainActivity.DETAILED_REQUEST_CODE);
         }
 
         public void launchEdit(Chore chore) {
             Intent intent = new Intent(context, EditActivity.class);
             intent.putExtra("chore", Parcels.wrap(chore));
             intent.putExtra("position", getAdapterPosition());
-            fragment.startActivityForResult(intent, ListFragment.UPDATE_REQUEST_CODE);
+            fragment.startActivityForResult(intent, MainActivity.UPDATE_REQUEST_CODE);
         }
 
         public void deleteChore(Chore chore) {
             chore.deleteInBackground();
             chores.remove(getAdapterPosition());
+            CalendarFragment.choreEvents.remove(getAdapterPosition());
             notifyItemRemoved(getAdapterPosition());
         }
     }

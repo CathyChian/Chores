@@ -6,14 +6,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chores.R;
 import com.example.chores.databinding.ActivityChoreDetailsBinding;
-import com.example.chores.fragments.ListFragment;
 import com.example.chores.models.Chore;
 
 import org.parceler.Parcels;
@@ -93,7 +91,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == ListFragment.UPDATE_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == MainActivity.UPDATE_REQUEST_CODE && resultCode == RESULT_OK) {
             chore = Parcels.unwrap((data.getParcelableExtra("chore")));
             setViews();
             Log.i(TAG, "onActivityResult: edit, name: " + chore.getName());
@@ -114,7 +112,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
         Intent intent = new Intent(ChoreDetailsActivity.this, EditActivity.class);
         intent.putExtra("chore", Parcels.wrap(chore));
         intent.putExtra("position", position);
-        startActivityForResult(intent, ListFragment.UPDATE_REQUEST_CODE);
+        startActivityForResult(intent, MainActivity.UPDATE_REQUEST_CODE);
     }
 
     public void passBackChore(String operation) {

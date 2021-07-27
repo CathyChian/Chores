@@ -1,5 +1,6 @@
 package com.example.chores.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,25 +11,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-import com.example.chores.ChoresApp;
-import com.example.chores.GoogleCalendarClient;
+import com.applandeo.materialcalendarview.EventDay;
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
+import com.example.chores.activities.ComposeActivity;
+import com.example.chores.activities.MainActivity;
 import com.example.chores.databinding.FragmentCalendarBinding;
-import com.example.chores.models.User;
-import com.parse.ParseUser;
 
-import org.json.JSONException;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Date;
-
-import okhttp3.Headers;
+import static android.app.Activity.RESULT_OK;
 
 public class CalendarFragment extends Fragment {
 
     public static final String TAG = "CalendarFragment";
     FragmentCalendarBinding binding;
-    private GoogleCalendarClient client;
-    User currentUser;
+
+    public static List<EventDay> choreEvents = new ArrayList<>();
 
     public CalendarFragment() {}
 
@@ -42,101 +41,43 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        client = ChoresApp.getRestClient(getActivity());
-        currentUser = (User) ParseUser.getCurrentUser();
+        binding.calendarView.setEvents(choreEvents);
 
-        binding.btnNewCalendar.setOnClickListener(new View.OnClickListener() {
+        for (EventDay choreEvent : choreEvents) {
+            Log.i(TAG, "Day: " + choreEvent.getCalendar());
+        }
+
+        binding.fabCompose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createCalendar();
-            }
-        });
-
-        binding.btnGetCalendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getCalendar();
-            }
-        });
-
-        binding.btnNewEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                Log.i(TAG, "clicked on compose fab");
                 createEvent();
             }
         });
-    }
 
-    public void createCalendar() {
-        String title = binding.etCalendarTitle.getText().toString();
-        Log.i(TAG, "Title: " + title);
-        client.createCalendar(title, new JsonHttpResponseHandler() {
+        binding.calendarView.setOnDayClickListener(new OnDayClickListener() {
             @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.i(TAG, "onSuccess to create new calendar. Title: " + title);
-                try {
-                    String summary = json.jsonObject.getString("summary");
-                    String id = json.jsonObject.getString("id");
-                    currentUser.setCalendarId(id);
-                    currentUser.saveInBackground();
-                    Log.i(TAG, "New calendar created. Title: " + summary + ", id: " + id);
-                } catch (JSONException e) {
-                    Log.i(TAG, "error trying to create new calendar", e);
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.i(TAG, "onFailure to create new calendar. Title: " + title + ", Response: " + response + ", Status code: " + statusCode, throwable);
+            public void onDayClick(EventDay eventDay) {
+                Log.i(TAG, "clicked on event day: " + eventDay.toString());
+                openDetailedView();
             }
         });
     }
 
-    public void getCalendar() {
-        String calendarId = currentUser.getCalendarId();
-        client.getCalendar(calendarId, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.i(TAG, "onSuccess to get calendar. Calendar id: " + calendarId);
-                try {
-                    String title = json.jsonObject.getString("summary");
-                    String id = json.jsonObject.getString("id");
-                    Log.i(TAG, "Title: " + title + ", id: " + id);
-
-                    binding.tvCalendarTitle.setText(title);
-                    binding.tvCalendarId.setText("id: " + id);
-                } catch (JSONException e) {
-                    Log.i(TAG, "error trying to get calendar", e);
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.i(TAG, "onFailure to create new calendar. Response: " + response + ", Status code: " + statusCode, throwable);
-            }
-        });
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MainActivity.ADD_REQUEST_CODE && resultCode == RESULT_OK) {
+            // TODO: update event
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void createEvent() {
-        String title = binding.etEventTitle.getText().toString();
-        Log.i(TAG, "Title: " + title);
-        client.createEvent(currentUser.getCalendarId(), title, new Date(), new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.i(TAG, "onSuccess to create new event. Title: " + title);
-                try {
-                    String summary = json.jsonObject.getString("summary");
-                    String id = json.jsonObject.getString("id");
-                    Log.i(TAG, "New event created. Title: " + summary + ", id: " + id);
-                } catch (JSONException e) {
-                    Log.i(TAG, "error trying to create new event", e);
-                }
-            }
+        Intent i = new Intent(getContext(), ComposeActivity.class);
+        startActivityForResult(i, MainActivity.ADD_REQUEST_CODE);
+    }
 
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.i(TAG, "onFailure to create new event. Title: " + title + ", Response: " + response + ", Status code: " + statusCode, throwable);
-            }
-        });
+    public void openDetailedView() {
+
     }
 }
