@@ -80,6 +80,15 @@
             tools:text="Due in 3 days" />
 
         <TextView
+            android:id="@+id/tvPriority"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvDateDue"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            tools:text="Priority: 8" />
+
+        <TextView
             android:id="@+id/tvSharedUsers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

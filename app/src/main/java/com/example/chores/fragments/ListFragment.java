@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,13 +38,14 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ListFragment extends Fragment {
+public class ListFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "PostsFragment";
     FragmentListBinding binding;
 
     public static ListAdapter adapter;
     public static List<Chore> chores;
+    public static String order = "weight";
 
     public ListFragment() {}
 
@@ -67,10 +70,11 @@ public class ListFragment extends Fragment {
         binding.rvList.setLayoutManager(linearLayoutManager);
         queryChores();
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            binding.rvList.scrollToPosition(bundle.getInt("position", 0));
-        }
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.queries_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinner.setAdapter(adapter);
+        binding.spinner.setOnItemSelectedListener(this);
 
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -98,6 +102,29 @@ public class ListFragment extends Fragment {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        String selected = parent.getItemAtPosition(pos).toString();
+        if (selected.equals("Recommended")) {
+            order = "weight";
+        } else if (selected.equals("Due Date")) {
+            order = "dateDue";
+        } else if (selected.equals("Priority")) {
+            order = "priority";
+        } else if (selected.equals("Date Created")) {
+            order = "createdAt";
+        } else if (selected.equals("Last Updated")) {
+            order = "updatedAt";
+        }
+        queryChores();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Keep the same selection
     }
 
     public void compose() {
@@ -149,6 +176,7 @@ public class ListFragment extends Fragment {
     protected void queryChores() {
         // TODO: Remove this, just temporary for testing Google sign-in
         if (ParseUser.getCurrentUser() == null) {
+            Log.i(TAG, "Not signed into Parse");
             return;
         }
 
@@ -164,7 +192,12 @@ public class ListFragment extends Fragment {
 
         ParseQuery<Chore> query = ParseQuery.or(queries);
         query.include("user");
-        query.addDescendingOrder("weight");
+        if (order.equals("dateDue")) {
+            query.addAscendingOrder(order);
+        } else {
+            query.addDescendingOrder(order);
+        }
+
         query.findInBackground(new FindCallback<Chore>() {
             @Override
             public void done(List<Chore> chores, ParseException e) {

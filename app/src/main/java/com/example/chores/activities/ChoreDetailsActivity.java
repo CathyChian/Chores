@@ -111,6 +111,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
         binding.tvRecurring.setText(chore.getRecurringText());
         binding.tvDateDue.setText(chore.getRelativeDateText());
         binding.tvSharedUsers.setText(chore.getListOfUsers());
+        binding.tvPriority.setText("Priority: " + chore.getPriority());
     }
 
     public void launchEdit() {

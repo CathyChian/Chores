@@ -88,7 +88,12 @@ public class Chore extends ParseObject {
         if (!priority.isEmpty())
             priorityInt = Integer.parseInt(priority);
         int dateDiff = getDateDiff(calendarToDateDue(dueDay, offset));
-        setWeight(-dateDiff * (1 + priorityInt / 10.0));
+
+        if (dateDiff < 0) {
+            setWeight(-dateDiff * (1 + priorityInt / 11.0));
+        } else {
+            setWeight(-dateDiff * (1 - priorityInt / 11.0));
+        }
     }
 
     public Date getDateDue() {

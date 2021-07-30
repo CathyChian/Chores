@@ -74,6 +74,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         private TextView tvRecurring;
         private TextView tvDateDue;
         private TextView tvSharedUsers;
+        private TextView tvPriority;
         private ImageView leftIvEdit;
         private ImageView rightIvDelete;
         private RelativeLayout itemChore;
@@ -85,6 +86,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             tvRecurring = binding.tvRecurring;
             tvDateDue = binding.tvDateDue;
             tvSharedUsers = binding.tvSharedUsers;
+            tvPriority = binding.tvPriority;
             leftIvEdit = binding.leftIvEdit;
             rightIvDelete = binding.rightIvDelete;
             itemChore = binding.itemChore;
@@ -96,6 +98,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             tvRecurring.setText(chore.getRecurringText());
             tvDateDue.setText(chore.getRelativeDateText());
             tvSharedUsers.setText(chore.getListOfUsers());
+            tvPriority.setText("Priority: " + chore.getPriority());
 
             leftIvEdit.setOnClickListener(new View.OnClickListener() {
                 @Override

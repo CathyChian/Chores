@@ -98,10 +98,6 @@ public class CalendarFragment extends Fragment {
     public void openDetailedView(EventDay eventDay) {
         if (eventDay instanceof ChoreEvent) {
             ListFragment listFragment = new ListFragment();
-            Bundle bundle = new Bundle();
-            bundle.putInt("position", choreEvents.indexOf(eventDay));
-            listFragment.setArguments(bundle);
-
             getParentFragmentManager().beginTransaction().replace(R.id.flContainer, listFragment).commit();
         }
     }

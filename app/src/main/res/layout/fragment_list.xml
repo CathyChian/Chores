@@ -15,11 +15,17 @@
         android:background="?attr/colorPrimary">
     </androidx.appcompat.widget.Toolbar>
 
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar">
+        android:layout_below="@id/spinner">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvList"
