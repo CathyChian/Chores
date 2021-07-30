@@ -1,6 +1,7 @@
 package com.example.chores.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,12 +19,16 @@ import org.parceler.Parcels;
 
 import java.util.Calendar;
 
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
+
 public class ChoreDetailsActivity extends AppCompatActivity {
 
     public static final String TAG = "ChoreDetailsActivity";
     ActivityChoreDetailsBinding binding;
     Chore chore;
     int position;
+    String operation = "update";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +49,8 @@ public class ChoreDetailsActivity extends AppCompatActivity {
         binding.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chore.deleteInBackground();
-                passBackChore("delete");
+                operation = "delete";
+                passBackChore();
             }
         });
 
@@ -53,13 +58,13 @@ public class ChoreDetailsActivity extends AppCompatActivity {
         binding.btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                konfetti();
                 if (chore.isRecurring()) {
                     chore.setDateDue(Calendar.getInstance(), chore.getFrequency());
                     chore.saveInBackground();
                     setViews();
                 } else {
-                    chore.deleteInBackground();
-                    passBackChore("delete");
+                    operation = "delete";
                 }
             }
         });
@@ -74,7 +79,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            passBackChore("update");
+            passBackChore();
             return true;
         }
         if (item.getItemId() == R.id.miCompose) {
@@ -86,7 +91,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        passBackChore("update");
+        passBackChore();
     }
 
     @Override
@@ -115,12 +120,26 @@ public class ChoreDetailsActivity extends AppCompatActivity {
         startActivityForResult(intent, MainActivity.UPDATE_REQUEST_CODE);
     }
 
-    public void passBackChore(String operation) {
+    public void passBackChore() {
         Intent intent = new Intent();
         intent.putExtra("chore", Parcels.wrap(chore));
         intent.putExtra("position", position);
         intent.putExtra("operation", operation);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    public void konfetti() {
+        binding.konfetti.build()
+                .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+                .setDirection(0.0, 359.0)
+                .setSpeed(2f, 10f)
+                .setFadeOutEnabled(true)
+                .setTimeToLive(2000L)
+                .addShapes(Shape.RECT, Shape.CIRCLE)
+                .addSizes(new Size(12, 5f))
+                .setPosition(-50f, binding.konfetti.getWidth() + 50f, -50f, -50f)
+                .streamFor(100, 1000L);
+
     }
 }

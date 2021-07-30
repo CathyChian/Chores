@@ -135,6 +135,7 @@ public class ListFragment extends Fragment {
                     CalendarFragment.choreEvents.set(position, new ChoreEvent(dateDue, R.drawable.event_icons));
                     adapter.notifyItemChanged(position);
                 } else if (operation.equals("delete")){
+                    chore.deleteInBackground();
                     chores.remove(position);
                     CalendarFragment.choreEvents.remove(position);
                     adapter.notifyItemRemoved(position);
