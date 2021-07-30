@@ -60,10 +60,22 @@
         android:id="@+id/etSharedUsers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etFrequency"
+        android:layout_below="@+id/etPriority"
         android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Shared User"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/etPriority"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etFrequency"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:hint="Priority"
         android:inputType="textPersonName" />
 
 </RelativeLayout>

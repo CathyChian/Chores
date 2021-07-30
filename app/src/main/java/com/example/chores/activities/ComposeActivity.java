@@ -8,26 +8,39 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.chores.ChoresApp;
+import com.example.chores.GoogleCalendarClient;
 import com.example.chores.databinding.ActivityComposeBinding;
 import com.example.chores.models.Chore;
+import com.example.chores.models.User;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONException;
 import org.parceler.Parcels;
 
 import java.util.Calendar;
+import java.util.Date;
+
+import okhttp3.Headers;
 
 public class ComposeActivity extends AppCompatActivity {
 
     public static final String TAG = "ComposeActivity";
     ActivityComposeBinding binding;
+    private GoogleCalendarClient client;
+    User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityComposeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        client = ChoresApp.getRestClient(ComposeActivity.this);
+        currentUser = (User) ParseUser.getCurrentUser();
 
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +51,8 @@ public class ComposeActivity extends AppCompatActivity {
                 chore.setUser(ParseUser.getCurrentUser());
                 chore.setRecurring(binding.tbtnRecurring.isChecked());
                 chore.setFrequency(binding.etFrequency.getText().toString());
+                chore.setPriority(binding.etPriority.getText().toString());
+                chore.setWeight((binding.etPriority.getText().toString()), Calendar.getInstance(), chore.getFrequency());
                 chore.setDateDue(Calendar.getInstance(), chore.getFrequency());
                 // TODO: Add ability to share with more than one user
                 chore.addUser(binding.etSharedUsers.getText().toString(), ComposeActivity.this);
@@ -49,11 +64,14 @@ public class ComposeActivity extends AppCompatActivity {
                             Log.e(TAG, "Error while saving " + e, e);
                             Toast.makeText(ComposeActivity.this, "Error while saving!", Toast.LENGTH_SHORT).show();
                         }
+                        createEvent(binding.etName.getText().toString(), chore.getDateDue());
                         Log.i(TAG, "Post save was successful!");
+
                         binding.etName.setText("");
                         binding.etDescription.setText("");
                         binding.tbtnRecurring.setChecked(false);
                         binding.etFrequency.setText("");
+                        binding.etPriority.setText("");
                         binding.etSharedUsers.setText("");
 
                         Intent intent = new Intent();
@@ -63,6 +81,28 @@ public class ComposeActivity extends AppCompatActivity {
                         finish();
                     }
                 });
+            }
+        });
+    }
+
+    public void createEvent(String title, Date date) {
+        Log.i(TAG, "Title: " + title);
+        client.createEvent(currentUser.getCalendarId(), title, date, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JsonHttpResponseHandler.JSON json) {
+                Log.i(TAG, "onSuccess to create new event. Title: " + title);
+                try {
+                    String summary = json.jsonObject.getString("summary");
+                    String id = json.jsonObject.getString("id");
+                    Log.i(TAG, "New event created. Title: " + summary + ", id: " + id);
+                } catch (JSONException e) {
+                    Log.i(TAG, "error trying to create new event", e);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.i(TAG, "onFailure to create new event. Title: " + title + ", Response: " + response + ", Status code: " + statusCode, throwable);
             }
         });
     }

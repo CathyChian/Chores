@@ -31,6 +31,10 @@ public class ChoreObject {
     }
 
     public static void addUser(Context context, ParseObject object, JSONArray jsonArray, final String KEY, String username) {
+        if (username.isEmpty()) {
+            return;
+        }
+
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereEqualTo("username", username);
         query.findInBackground(new FindCallback<ParseUser>() {

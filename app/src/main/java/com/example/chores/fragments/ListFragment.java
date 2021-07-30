@@ -163,7 +163,7 @@ public class ListFragment extends Fragment {
 
         ParseQuery<Chore> query = ParseQuery.or(queries);
         query.include("user");
-        query.addDescendingOrder(Chore.KEY_CREATED_AT);
+        query.addDescendingOrder("weight");
         query.findInBackground(new FindCallback<Chore>() {
             @Override
             public void done(List<Chore> chores, ParseException e) {

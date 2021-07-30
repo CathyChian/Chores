@@ -75,14 +75,32 @@ public class Chore extends ParseObject {
             put("priority", Integer.valueOf(priority));
     }
 
+    public double getWeight() {
+        return getNumber("weight").doubleValue();
+    }
+
+    public void setWeight(double weight) {
+        put("weight", weight);
+    }
+
+    public void setWeight(String priority, Calendar dueDay, int offset) {
+        int priorityInt = 0;
+        if (!priority.isEmpty())
+            priorityInt = Integer.parseInt(priority);
+        int dateDiff = getDateDiff(calendarToDateDue(dueDay, offset));
+        setWeight(-dateDiff * (1 + priorityInt / 10.0));
+    }
+
     public Date getDateDue() {
         return getDate("dateDue");
     }
 
+    public void setDateDue(Date dateDue) {
+        put("dateDue", dateDue);
+    }
+
     public void setDateDue(Calendar dueDay, int offset) {
-        ChoreObject.reduceDateToDay(dueDay);
-        dueDay.setTimeInMillis(dueDay.getTimeInMillis() + TimeUnit.DAYS.toMillis(offset));
-        put("dateDue", dueDay.getTime());
+        put("dateDue", calendarToDateDue(dueDay, offset));
     }
 
     public JSONArray getSharedUsers() {
@@ -102,9 +120,19 @@ public class Chore extends ParseObject {
         return "Repeats every " + getFrequency() + " days";
     }
 
+    public Date calendarToDateDue(Calendar dueDay, int offset) {
+        ChoreObject.reduceDateToDay(dueDay);
+        dueDay.setTimeInMillis(dueDay.getTimeInMillis() + TimeUnit.DAYS.toMillis(offset));
+        return dueDay.getTime();
+    }
+
+    public int getDateDiff(Date dateDue) {
+        long diffInMillis = dateDue.getTime() - ChoreObject.reduceDateToDay(Calendar.getInstance()).getTimeInMillis();
+        return (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+    }
+
     public String getRelativeDateText() {
-        long diffInMillis = getDateDue().getTime() - ChoreObject.reduceDateToDay(Calendar.getInstance()).getTimeInMillis();
-        int diffInDays = (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+        int diffInDays = getDateDiff(getDateDue());
 
         if (diffInDays < -1)
             return "Due " + Math.abs(diffInDays) + " days ago";
