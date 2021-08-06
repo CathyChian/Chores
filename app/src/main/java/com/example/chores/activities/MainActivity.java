@@ -14,7 +14,6 @@ import com.example.chores.databinding.ActivityMainBinding;
 import com.example.chores.fragments.AccountFragment;
 import com.example.chores.fragments.CalendarFragment;
 import com.example.chores.fragments.ListFragment;
-import com.example.chores.fragments.RoommatesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
         final Fragment listFragment = new ListFragment();
         final Fragment calendarFragment = new CalendarFragment();
-        final Fragment roommatesFragment = new RoommatesFragment();
         final Fragment accountFragment = new AccountFragment();
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -50,10 +48,6 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_calendar:
                         Log.i(TAG, "Clicked calendar menu item");
                         fragment = calendarFragment;
-                        break;
-                    case R.id.action_roommates:
-                        Log.i(TAG, "Clicked roommates menu item");
-                        fragment = roommatesFragment;
                         break;
                     case R.id.action_account:
                         Log.i(TAG, "Clicked account menu item");

@@ -46,7 +46,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
 
         setViews();
 
-        binding.ivDelete.setOnClickListener(new View.OnClickListener() {
+        binding.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 operation = "delete";
@@ -111,7 +111,7 @@ public class ChoreDetailsActivity extends AppCompatActivity {
         binding.tvRecurring.setText(chore.getRecurringText());
         binding.tvDateDue.setText(chore.getRelativeDateText());
         binding.tvSharedUsers.setText(chore.getListOfUsers());
-        binding.tvPriority.setText("Priority: " + chore.getPriority());
+        binding.tvPriority.setText("Importance: " + chore.getPriority());
     }
 
     public void launchEdit() {
@@ -141,6 +141,5 @@ public class ChoreDetailsActivity extends AppCompatActivity {
                 .addSizes(new Size(12, 5f))
                 .setPosition(-50f, binding.konfetti.getWidth() + 50f, -50f, -50f)
                 .streamFor(100, 1000L);
-
     }
 }

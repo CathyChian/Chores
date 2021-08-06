@@ -6,11 +6,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chores.databinding.ActivityComposeBinding;
 import com.example.chores.models.Chore;
 import com.example.chores.models.ChoreObject;
+import com.google.android.material.slider.Slider;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
@@ -25,6 +27,7 @@ public class EditActivity extends AppCompatActivity {
     ActivityComposeBinding binding;
     Chore chore;
     int position;
+    int priority;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +42,20 @@ public class EditActivity extends AppCompatActivity {
         binding.etDescription.setText(chore.getDescription());
         binding.tbtnRecurring.setChecked(chore.isRecurring());
         binding.etFrequency.setText(String.valueOf(chore.getFrequency()));
-        binding.etPriority.setText(String.valueOf(chore.getFrequency()));
+        binding.sPriority.setValue(chore.getPriority());
 
         // TODO: Get more than one user
         List<String> usernames = ChoreObject.getUsernames(chore.getSharedUsers());
         if (usernames != null) {
             binding.etSharedUsers.setText(ChoreObject.getUsernames(chore.getSharedUsers()).get(0));
         }
+
+        binding.sPriority.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                priority = (int) value;
+            }
+        });
 
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,8 +64,8 @@ public class EditActivity extends AppCompatActivity {
                 chore.setDescription(binding.etDescription.getText().toString());
                 chore.setRecurring(binding.tbtnRecurring.isChecked());
                 chore.setFrequency(binding.etFrequency.getText().toString());
-                chore.setPriority(binding.etPriority.getText().toString());
-                chore.setWeight((binding.etPriority.getText().toString()), Calendar.getInstance(), chore.getFrequency());
+                chore.setPriority(priority);
+                chore.setWeight(priority, Calendar.getInstance(), chore.getFrequency());
                 // TODO: Maybe ask if user wants to change due date?
                 chore.addUser(binding.etSharedUsers.getText().toString(), EditActivity.this);
 
@@ -71,7 +81,7 @@ public class EditActivity extends AppCompatActivity {
                         binding.etDescription.setText("");
                         binding.tbtnRecurring.setChecked(false);
                         binding.etFrequency.setText("");
-                        binding.etPriority.setText("");
+                        binding.sPriority.setValue(0);
                         binding.etSharedUsers.setText("");
 
                         Intent intent = new Intent();

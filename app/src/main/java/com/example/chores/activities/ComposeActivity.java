@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -14,6 +15,7 @@ import com.example.chores.GoogleCalendarClient;
 import com.example.chores.databinding.ActivityComposeBinding;
 import com.example.chores.models.Chore;
 import com.example.chores.models.User;
+import com.google.android.material.slider.Slider;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -32,6 +34,7 @@ public class ComposeActivity extends AppCompatActivity {
     ActivityComposeBinding binding;
     private GoogleCalendarClient client;
     User currentUser;
+    int priority;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,13 @@ public class ComposeActivity extends AppCompatActivity {
         client = ChoresApp.getRestClient(ComposeActivity.this);
         currentUser = (User) ParseUser.getCurrentUser();
 
+        binding.sPriority.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                priority = (int) value;
+            }
+        });
+
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,10 +61,9 @@ public class ComposeActivity extends AppCompatActivity {
                 chore.setUser(ParseUser.getCurrentUser());
                 chore.setRecurring(binding.tbtnRecurring.isChecked());
                 chore.setFrequency(binding.etFrequency.getText().toString());
-                chore.setPriority(binding.etPriority.getText().toString());
-                chore.setWeight((binding.etPriority.getText().toString()), Calendar.getInstance(), chore.getFrequency());
+                chore.setPriority(priority);
+                chore.setWeight(priority, Calendar.getInstance(), chore.getFrequency());
                 chore.setDateDue(Calendar.getInstance(), chore.getFrequency());
-                // TODO: Add ability to share with more than one user
                 chore.addUser(binding.etSharedUsers.getText().toString(), ComposeActivity.this);
 
                 chore.saveInBackground(new SaveCallback() {
@@ -71,7 +80,7 @@ public class ComposeActivity extends AppCompatActivity {
                         binding.etDescription.setText("");
                         binding.tbtnRecurring.setChecked(false);
                         binding.etFrequency.setText("");
-                        binding.etPriority.setText("");
+                        binding.sPriority.setValue(0);
                         binding.etSharedUsers.setText("");
 
                         Intent intent = new Intent();

@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -65,6 +66,7 @@ public class ListFragment extends Fragment implements AdapterView.OnItemSelected
         chores = new ArrayList<>();
         adapter = new ListAdapter(getContext(), ListFragment.this, chores);
 
+        binding.rvList.addItemDecoration(new DividerItemDecoration(binding.rvList.getContext(), DividerItemDecoration.VERTICAL));
         binding.rvList.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.rvList.setLayoutManager(linearLayoutManager);

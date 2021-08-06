@@ -70,9 +70,8 @@ public class Chore extends ParseObject {
         return getNumber("priority").intValue();
     }
 
-    public void setPriority(String priority) {
-        if (!priority.isEmpty())
-            put("priority", Integer.valueOf(priority));
+    public void setPriority(int priority) {
+        put("priority", priority);
     }
 
     public double getWeight() {
@@ -83,16 +82,13 @@ public class Chore extends ParseObject {
         put("weight", weight);
     }
 
-    public void setWeight(String priority, Calendar dueDay, int offset) {
-        int priorityInt = 0;
-        if (!priority.isEmpty())
-            priorityInt = Integer.parseInt(priority);
+    public void setWeight(int priority, Calendar dueDay, int offset) {
         int dateDiff = getDateDiff(calendarToDateDue(dueDay, offset));
 
         if (dateDiff < 0) {
-            setWeight(-dateDiff * (1 + priorityInt / 11.0));
+            setWeight(-dateDiff * (1 + priority / 11.0));
         } else {
-            setWeight(-dateDiff * (1 - priorityInt / 11.0));
+            setWeight(-dateDiff * (1 - priority / 11.0));
         }
     }
 
@@ -118,7 +114,7 @@ public class Chore extends ParseObject {
 
     public String getRecurringText() {
         if (!isRecurring() || getFrequency() < 1)
-            return "Does not repeat";
+            return "";
         if (getFrequency() == 1)
             return "Repeats every day";
 

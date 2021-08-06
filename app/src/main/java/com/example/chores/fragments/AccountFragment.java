@@ -22,8 +22,6 @@ import com.parse.ParseUser;
 
 import org.json.JSONException;
 
-import java.util.Date;
-
 import okhttp3.Headers;
 
 public class AccountFragment extends Fragment {
@@ -49,6 +47,9 @@ public class AccountFragment extends Fragment {
         client = ChoresApp.getRestClient(getContext());
         currentUser = (User) ParseUser.getCurrentUser();
 
+        binding.tvUsername.setText(currentUser.getUsername());
+        getCalendar();
+
         binding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,25 +64,11 @@ public class AccountFragment extends Fragment {
                 createCalendar();
             }
         });
-
-        binding.btnGetCalendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getCalendar();
-            }
-        });
-
-        binding.btnNewEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createEvent();
-            }
-        });
     }
 
     public void logout() {
         ParseUser.logOut();
-        client.clearAccessToken();
+        // client.clearAccessToken();
         Toast.makeText(getContext(), "Logged out!", Toast.LENGTH_SHORT).show();
         goLoginActivity();
     }
@@ -104,6 +91,8 @@ public class AccountFragment extends Fragment {
                     currentUser.setCalendarId(id);
                     currentUser.saveInBackground();
                     Log.i(TAG, "New calendar created. Title: " + summary + ", id: " + id);
+
+                    binding.tvCalendar.setText(summary);
                 } catch (JSONException e) {
                     Log.i(TAG, "error trying to create new calendar", e);
                 }
@@ -127,8 +116,7 @@ public class AccountFragment extends Fragment {
                     String id = json.jsonObject.getString("id");
                     Log.i(TAG, "Title: " + title + ", id: " + id);
 
-                    binding.tvCalendarTitle.setText(title);
-                    binding.tvCalendarId.setText("id: " + id);
+                    binding.tvCalendar.setText(title);
                 } catch (JSONException e) {
                     Log.i(TAG, "error trying to get calendar", e);
                 }
@@ -137,29 +125,6 @@ public class AccountFragment extends Fragment {
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.i(TAG, "onFailure to create new calendar. Response: " + response + ", Status code: " + statusCode, throwable);
-            }
-        });
-    }
-
-    public void createEvent() {
-        String title = binding.etEventTitle.getText().toString();
-        Log.i(TAG, "Title: " + title);
-        client.createEvent(currentUser.getCalendarId(), title, new Date(), new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.i(TAG, "onSuccess to create new event. Title: " + title);
-                try {
-                    String summary = json.jsonObject.getString("summary");
-                    String id = json.jsonObject.getString("id");
-                    Log.i(TAG, "New event created. Title: " + summary + ", id: " + id);
-                } catch (JSONException e) {
-                    Log.i(TAG, "error trying to create new event", e);
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.i(TAG, "onFailure to create new event. Title: " + title + ", Response: " + response + ", Status code: " + statusCode, throwable);
             }
         });
     }

@@ -13,89 +13,78 @@
 
     <ImageView
         android:id="@+id/left_ivEdit"
-        android:layout_width="90dp"
+        android:layout_width="60dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#4488cc"
+        android:background="@color/teal"
         android:gravity="center"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:src="@android:drawable/ic_menu_edit" />
+        android:paddingStart="9dp"
+        android:paddingEnd="9dp"
+        android:src="@drawable/ic_edit" />
 
     <ImageView
         android:id="@+id/right_ivDelete"
-        android:layout_width="90dp"
+        android:layout_width="60dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:background="#ff5722"
+        android:background="@color/dark_red"
         android:gravity="center"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:src="@android:drawable/ic_delete" />
+        android:paddingStart="9dp"
+        android:paddingEnd="9dp"
+        android:src="@drawable/ic_vector_close" />
 
     <RelativeLayout
         android:id="@+id/item_chore"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="66dp"
         android:background="#ffffff">
 
         <TextView
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_toEndOf="@+id/cbDone"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             tools:text="New Chore" />
-
-        <TextView
-            android:id="@+id/tvDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvName"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            tools:text="Description" />
-
-        <TextView
-            android:id="@+id/tvRecurring"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            tools:text="Repeats every 5 days" />
 
         <TextView
             android:id="@+id/tvDateDue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvRecurring"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:layout_toStartOf="@+id/rlImportance"
             tools:text="Due in 3 days" />
 
         <TextView
-            android:id="@+id/tvPriority"
+            android:id="@+id/tvRecurring"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvDateDue"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            tools:text="Priority: 8" />
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="12dp"
+            android:layout_toStartOf="@+id/rlImportance"
+            android:textSize="12sp"
+            tools:text="Repeats every day" />
 
-        <TextView
-            android:id="@+id/tvSharedUsers"
+        <CheckBox
+            android:id="@+id/cbDone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvDescription"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
-            tools:text="Shared with: billy" />
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="7dp" />
+
+        <RelativeLayout
+            android:id="@+id/rlImportance"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="#44cccc" />
+
     </RelativeLayout>
 </com.zerobranch.layout.SwipeLayout>

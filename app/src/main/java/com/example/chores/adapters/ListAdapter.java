@@ -1,17 +1,22 @@
 package com.example.chores.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chores.R;
 import com.example.chores.activities.ChoreDetailsActivity;
 import com.example.chores.activities.EditActivity;
 import com.example.chores.activities.MainActivity;
@@ -22,7 +27,11 @@ import com.example.chores.models.Chore;
 
 import org.parceler.Parcels;
 
+import java.util.Calendar;
 import java.util.List;
+
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
@@ -70,11 +79,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvName;
-        private TextView tvDescription;
-        private TextView tvRecurring;
         private TextView tvDateDue;
-        private TextView tvSharedUsers;
-        private TextView tvPriority;
+        private TextView tvRecurring;
+        private RelativeLayout rlImportance;
+        private CheckBox cbDone;
+        private nl.dionsegijn.konfetti.KonfettiView konfetti;
         private ImageView leftIvEdit;
         private ImageView rightIvDelete;
         private RelativeLayout itemChore;
@@ -82,11 +91,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = binding.tvName;
-            tvDescription = binding.tvDescription;
-            tvRecurring = binding.tvRecurring;
             tvDateDue = binding.tvDateDue;
-            tvSharedUsers = binding.tvSharedUsers;
-            tvPriority = binding.tvPriority;
+            tvRecurring = binding.tvRecurring;
+            rlImportance = binding.rlImportance;
+            cbDone = binding.cbDone;
+            konfetti = ((Activity) context).findViewById(R.id.konfetti);
             leftIvEdit = binding.leftIvEdit;
             rightIvDelete = binding.rightIvDelete;
             itemChore = binding.itemChore;
@@ -94,11 +103,26 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
         public void bind(Chore chore) {
             tvName.setText(chore.getName());
-            tvDescription.setText(chore.getDescription());
-            tvRecurring.setText(chore.getRecurringText());
             tvDateDue.setText(chore.getRelativeDateText());
-            tvSharedUsers.setText(chore.getListOfUsers());
-            tvPriority.setText("Priority: " + chore.getPriority());
+            tvRecurring.setText(chore.getRecurringText());
+            setImportanceColor(chore.getWeight());
+
+            cbDone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (cbDone.isChecked()) {
+                        konfetti();
+                        if (chore.isRecurring()) {
+                            chore.setDateDue(Calendar.getInstance(), chore.getFrequency());
+                            chore.saveInBackground();
+                            notifyItemChanged(getAdapterPosition());
+                        } else {
+                            deleteChore(chore);
+                        }
+                        cbDone.toggle();
+                    }
+                }
+            });
 
             leftIvEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -142,6 +166,33 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             chores.remove(getAdapterPosition());
             CalendarFragment.choreEvents.remove(getAdapterPosition());
             notifyItemRemoved(getAdapterPosition());
+        }
+
+        public void setImportanceColor(double weight) {
+            if (weight < -5) {
+                rlImportance.setBackgroundColor(ContextCompat.getColor(context, R.color.blue));
+            } else if (weight < 0) {
+                rlImportance.setBackgroundColor(ContextCompat.getColor(context, R.color.green));
+            } else if (weight == 0) {
+                rlImportance.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow));
+            } else if (weight > 0) {
+                rlImportance.setBackgroundColor(ContextCompat.getColor(context, R.color.orange));
+            } else if (weight > 5) {
+                rlImportance.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+            }
+        }
+
+        public void konfetti() {
+            konfetti.build()
+                    .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+                    .setDirection(0.0, 359.0)
+                    .setSpeed(2f, 10f)
+                    .setFadeOutEnabled(true)
+                    .setTimeToLive(2000L)
+                    .addShapes(Shape.RECT, Shape.CIRCLE)
+                    .addSizes(new Size(12, 5f))
+                    .setPosition(-50f, konfetti.getWidth() + 50f, -50f, -50f)
+                    .streamFor(100, 1000L);
         }
     }
 }

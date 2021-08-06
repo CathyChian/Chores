@@ -4,25 +4,19 @@
     <item
         android:id="@+id/action_list"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:icon="@drawable/selector_list"
         android:title="List"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_calendar"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_month"
+        android:icon="@drawable/selector_calendar"
         android:title="Calendar"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_roommates"
-        android:enabled="true"
-        android:icon="@android:drawable/ic_menu_agenda"
-        android:title="Roommates"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_account"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:icon="@drawable/selector_account"
         android:title="Account"
         app:showAsAction="ifRoom" />
 </menu>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     tools:context=".fragments.ListFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -11,9 +12,16 @@
         android:minHeight="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextColor="@android:color/white"
-        android:background="?attr/colorPrimary">
-    </androidx.appcompat.widget.Toolbar>
+        android:background="@color/white"
+        android:theme="@style/ToolbarTheme" />
+
+    <nl.dionsegijn.konfetti.KonfettiView
+        android:id="@+id/konfetti"
+        android:translationZ="90dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
     <Spinner
         android:id="@+id/spinner"

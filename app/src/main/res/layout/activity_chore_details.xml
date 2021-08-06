@@ -10,16 +10,17 @@
         android:minHeight="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextColor="@android:color/white"
-        android:background="?attr/colorPrimary">
-    </androidx.appcompat.widget.Toolbar>
+        android:background="@color/white"
+        android:theme="@style/ToolbarTheme" />
 
     <nl.dionsegijn.konfetti.KonfettiView
         android:id="@+id/konfetti"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
 
     <TextView
         android:id="@+id/tvName"
@@ -27,6 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:text="New Chore" />
 
@@ -36,33 +39,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvName"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
         tools:text="Description" />
-
-    <ImageView
-        android:id="@+id/ivDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:layout_alignParentEnd="true"
-        app:srcCompat="@android:drawable/ic_delete" />
-
-    <TextView
-        android:id="@+id/tvRecurring"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivDelete"
-        android:layout_alignParentEnd="true"
-        tools:text="Repeats every 5 days" />
-
-    <TextView
-        android:id="@+id/tvDateDue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvRecurring"
-        android:layout_alignParentEnd="true"
-        tools:text="Due in 3 days" />
 
     <TextView
         android:id="@+id/tvSharedUsers"
@@ -70,23 +49,62 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvDescription"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
         tools:text="Shared with: billy" />
 
     <TextView
         android:id="@+id/tvPriority"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvName"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="20dp"
+        tools:text="Priority: 8" />
+
+    <TextView
+        android:id="@+id/tvDateDue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvPriority"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        tools:text="Due in 3 days" />
+
+    <TextView
+        android:id="@+id/tvRecurring"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/tvDateDue"
         android:layout_alignParentEnd="true"
-        tools:text="Priority: 8" />
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        tools:text="Repeats every 5 days" />
 
     <Button
         android:id="@+id/btnDone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvPriority"
+        android:layout_below="@+id/tvSharedUsers"
         android:layout_alignParentStart="true"
-        android:text="Mark as done" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/teal"
+        android:text="Mark as done"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnDone"
+        android:layout_alignParentStart="true"
+        android:layout_marginHorizontal="20dp"
+        android:backgroundTint="@color/dark_red"
+        android:text="Delete"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/miCompose"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/ic_edit_toolbar"
         android:title="Edit"
         app:showAsAction="always" />
 </menu>
