@@ -31,6 +31,8 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -188,8 +190,9 @@ public class ListFragment extends Fragment implements AdapterView.OnItemSelected
         ownedQuery.whereEqualTo("user", ParseUser.getCurrentUser());
         queries.add(ownedQuery);
 
+        // TODO: whereContains() doesn't work
         ParseQuery<Chore> sharedQuery = ParseQuery.getQuery(Chore.class);
-        ownedQuery.whereContains("sharedUsers", ParseUser.getCurrentUser().getObjectId());
+        sharedQuery.whereExists("sharedUsers");
         queries.add(sharedQuery);
 
         ParseQuery<Chore> query = ParseQuery.or(queries);

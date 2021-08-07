@@ -45,7 +45,7 @@ public class ChoreObject {
                     return;
                 }
                 if (users.isEmpty()) {
-                    Toast.makeText(context, username + " does not exist", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(context, username + " does not exist", Toast.LENGTH_LONG).show();
                     Log.i(TAG, username + " does not exist");
                     return;
                 }
@@ -59,7 +59,7 @@ public class ChoreObject {
     public static void addUser(Context context, ParseObject object, JSONArray jsonArray, final String KEY, String username, String objectId) {
         for (String s : getObjectIds(jsonArray)) {
             if (s.equals(objectId)) {
-                Toast.makeText(context, username + " already added", Toast.LENGTH_LONG).show();
+                // Toast.makeText(context, username + " already added", Toast.LENGTH_LONG).show();
                 Log.i(TAG, username + " already added, objectId: " + objectId);
                 return;
             }

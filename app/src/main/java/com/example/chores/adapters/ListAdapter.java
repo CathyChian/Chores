@@ -114,6 +114,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                         konfetti();
                         if (chore.isRecurring()) {
                             chore.setDateDue(Calendar.getInstance(), chore.getFrequency());
+                            chore.setWeight(chore.getPriority(), Calendar.getInstance(), chore.getFrequency());
+                            setImportanceColor(chore.getWeight());
                             chore.saveInBackground();
                             notifyItemChanged(getAdapterPosition());
                         } else {
